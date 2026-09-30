@@ -184,7 +184,7 @@ export function InvitationForm() {
               </legend>
               <div className="form-field">
                 <label htmlFor="host_name">
-                  Birthday girl’s name <span className="required">*</span>
+                  Name to celebrate <span className="required">*</span>
                 </label>
                 <input
                   {...field("host_name")}

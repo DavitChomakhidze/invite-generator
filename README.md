@@ -1,6 +1,6 @@
-# sixteen
+# occasion
 
-A Sweet Sixteen invitation generator with a custom illustrated host and an animated envelope reveal. Guests can read the details and open Google Maps. There are no replies, RSVPs, accounts, analytics, or database connections.
+A birthday invitation generator with a custom illustrated host and an animated envelope reveal. Guests can read the details and open Google Maps. There are no replies, RSVPs, accounts, analytics, or database connections.
 
 ## Run
 

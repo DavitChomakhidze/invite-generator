@@ -13,7 +13,7 @@ export default function NotFound() {
           host for a new invitation link.
         </p>
         <Link className="button primary" href="/">
-          Back to sixteen
+          Back to occasion
         </Link>
       </main>
       <Footer />

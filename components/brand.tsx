@@ -1,8 +1,8 @@
 import Link from "next/link";
 export function Brand() {
   return (
-    <Link href="/" className="brand" aria-label="Sixteen home">
-      sixteen<span className="brand-dot">.</span>
+    <Link href="/" className="brand" aria-label="Occasion home">
+      occasion<span className="brand-dot">.</span>
     </Link>
   );
 }
@@ -26,7 +26,7 @@ export function Footer() {
   return (
     <footer className="site-footer">
       <span>
-        sixteen.{" "}
+        occasion.{" "}
         <span className="footer-muted">An invitation to remember.</span>
       </span>
       <span>For your favorite people.</span>

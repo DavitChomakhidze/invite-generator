@@ -26,7 +26,7 @@ export function ShareControls({
       return;
     }
     try {
-      await navigator.share({ title: "You're invited · sixteen", url });
+      await navigator.share({ title: "You're invited · occasion", url });
       setStatus("Shared!");
     } catch (error) {
       if (!(error instanceof DOMException && error.name === "AbortError"))

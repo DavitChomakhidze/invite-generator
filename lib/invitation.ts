@@ -14,7 +14,7 @@ export const invitationSchema = z.object({
   host_name: z
     .string()
     .trim()
-    .min(1, "Add the birthday girl's name.")
+    .min(1, "Add the name to celebrate.")
     .max(80, "Keep the name under 80 characters."),
   event_date: z
     .string()

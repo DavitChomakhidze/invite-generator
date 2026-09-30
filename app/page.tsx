@@ -8,11 +8,11 @@ export default function Home() {
       <main id="main-content" className="home-main">
         <section className="hero">
           <div className="hero-eyebrow">
-            YOUR SIXTEENTH, BEAUTIFULLY INVITED
+            BIRTHDAY INVITATIONS, BEAUTIFULLY MADE
           </div>
           <h1>
-            Turning sixteen.
-            <br className="mobile-break" /> <em>Making memories.</em>
+            Your celebration.
+            <br className="mobile-break" /> <em>Beautifully invited.</em>
           </h1>
           <p>
             A personal invitation for a once-in-a-lifetime celebration.

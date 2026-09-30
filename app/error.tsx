@@ -13,7 +13,7 @@ export default function ErrorPage({ reset }: { reset: () => void }) {
         Try again
       </button>
       <Link className="text-link" href="/">
-        Back to sixteen
+        Back to occasion
       </Link>
     </main>
   );

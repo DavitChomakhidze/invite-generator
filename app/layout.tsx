@@ -12,16 +12,16 @@ const body = localFont({
 });
 
 export const metadata: Metadata = {
-  icons: { icon: "/monogram.svg" },
+  icons: { icon: "/occasion-mark.svg" },
   title: {
-    default: "sixteen · An invitation to remember.",
-    template: "%s · sixteen",
+    default: "occasion · Birthday invitations worth opening",
+    template: "%s · occasion",
   },
   description:
-    "Create a beautiful animated Sweet Sixteen invitation. Made with a little love, ready to share.",
+    "Create a beautiful animated birthday invitation. Made with a little love, ready to share.",
   referrer: "no-referrer",
   openGraph: {
-    title: "You're invited · sixteen",
+    title: "You're invited · occasion",
     description:
       "A very special celebration, and a little invitation made with love.",
     type: "website",

@@ -6,7 +6,7 @@ async function create(page: Page) {
   await expect(
     page.getByRole("heading", { name: "Make it yours" }),
   ).toBeVisible();
-  await page.getByLabel("Birthday girl’s name").fill("Sofia");
+  await page.getByLabel("Name to celebrate").fill("Sofia");
   await page.getByLabel("The date", { exact: false }).fill("2035-06-19");
   await page.getByLabel("The time", { exact: false }).fill("18:00");
   await page.getByLabel("Event timezone").selectOption("Asia/Tbilisi");
@@ -87,7 +87,7 @@ test("editing produces a new link and the old link still opens", async ({
   await page
     .getByRole("button", { name: "Change details and make a new link" })
     .click();
-  await page.getByLabel("Birthday girl’s name").fill("Sofia Rose");
+  await page.getByLabel("Name to celebrate").fill("Sofia Rose");
   await page.getByRole("button", { name: "Generate my invitation" }).click();
   await expect(
     page.getByRole("heading", { name: "Your invitation is ready." }),
@@ -186,7 +186,7 @@ test("validation, invalid links, reduced motion, and icon-free narrow layout", a
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   await page.getByRole("button", { name: "Generate my invitation" }).click();
-  await expect(page.getByText("Add the birthday girl's name.")).toBeVisible();
+  await expect(page.getByText("Add the name to celebrate.")).toBeVisible();
   await page.getByRole("button", { name: "Show preview" }).click();
   await expect(
     page.getByRole("heading", { name: "Isabella’s", exact: true }),
