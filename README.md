@@ -1,53 +1,46 @@
 # occasion
 
-A birthday invitation generator with a custom illustrated host and an animated envelope reveal. Guests can read the details and open Google Maps. There are no replies, RSVPs, accounts, analytics, or database connections.
+A birthday invitation website with a live preview and an animated envelope reveal. Create an invitation, copy its link, and send it to guests. Guests can view the event details and open the location in Google Maps. The site has no accounts, RSVP form, replies, or database.
 
-## Run
+## Run locally
 
-Use Node.js 22.13+ (Node 24 recommended).
+Use Node.js 22.13 or newer. Node 24 is recommended.
 
 ```sh
 npm ci
 npm run dev
 ```
 
-Open http://localhost:3000. No environment variables or external services are needed.
+Open `http://localhost:3000`. No environment variables are required. Development uses Webpack because Turbopack's hot reload has crashed on Windows in this project. Production builds use the default Next.js build.
 
-Development uses Webpack (`next dev --webpack`) to avoid a Turbopack hot-reload crash on Windows. After changing bundlers, stop the old development server and restart with `npm run dev`. Production builds still use the default Next.js bundler.
+## How invitation links work
 
-## Share links
+The browser validates the form and creates a URL beginning with `/invite#v1.`. The details are compressed and encoded in the part of the link after `#`. A guest's browser reads those details and displays the invitation. There is no stored invitation to retrieve from a server.
 
-The creator fills in the details and generates a link like `/invite#v1.…`. The browser validates, compresses, and encodes the details into the URL fragment. The guest browser reads that fragment; invitation details are never sent to the hosting server.
+- Share the **entire URL**, including everything after `#`.
+- Create invitations on the deployed site. Links made on `localhost` only point to your own computer.
+- Guests can reopen the same link later or on another device while the site remains available at that address. Event dates do not expire the link.
+- Changing the details creates a new link. The old link stays as it was and cannot be edited or revoked.
+- Anyone with the link can read the invitation. Encoding is not encryption.
+- JavaScript and a browser with the Compression Streams API are required to create and open links.
 
-- Save and share the **entire link**, including everything after `#`.
-- Links work on another device without cookies or local storage, as long as the site is hosted at a publicly reachable address.
-- Changing the details generates a new link. Old links stay unchanged and cannot be revoked.
-- There is no private management link or stored invitation record.
-- The encoding is not encryption or proof of authorship. Anyone with the link can read the details.
-- JavaScript is required to create and open links. Chrome, Edge, Firefox, and Safari versions supporting the Compression Streams API are supported.
-- Old `/i/…` and `/manage/…` database-backed links are retired. Previously created local database files are left untouched but are no longer read.
+The animation plays when the invitation enters view. Guests can skip or replay it. Reduced-motion settings show the settled invitation immediately, with a **Play animation** button for anyone who wants to watch it.
 
-## Animation
+## Publish
 
-The sequence starts when the illustration enters the viewport, including when a hidden mobile preview opens. The host arrives, presents an envelope, the seal releases, the flap opens, and the card rises out. Details unfold below. Skip and replay are available. Reduced-motion preferences show the settled invitation immediately and pause autoplay; guests can explicitly choose **Play animation** to watch the full sequence. Playing manually scrolls the scene into view.
+Push the repository to GitHub, then import it as a Next.js project in Vercel. Keep the repository root as the project root and use the default build command. No database, server secret, or environment variable is needed. Vercel deploys new commits to the production branch automatically.
 
-## Deploy
-
-Import the repository into Vercel as a Next.js project, or run `npm run build` and `npm start` on a Node host. No Supabase project, database, server secret, or API key is needed. Create real invitations from the public domain, because locally generated links point to localhost.
-
-Both pages are prerendered by Next.js. Guest metadata is generic and `noindex`; the URL fragment is only processed in the browser. Google Maps links use an HTTPS host/path allowlist, text is rendered as plain text, and decompressed payloads are size-limited before parsing.
+After deployment, open the public site and create a fresh invitation there. Check the complete link in a private window or on another device before sharing it.
 
 ## Checks
 
 ```sh
-npm run build
-npm run typecheck
 npm run lint
+npm run typecheck
 npm test
+npm run build
 npx playwright install chromium webkit
 npm run test:e2e
 ```
 
-Playwright uses the running server on port 3000, or starts one when needed. Tests cover cross-browser link creation and reopening in a fresh browser, no response controls or POST requests, edits producing new links, malformed links, mobile animation visibility, moving envelope/flap, skip/replay, reduced motion, clipboard fallback, and accessibility.
-
-To audit the production homepage, start `npm run start -- --port 3200` then run `npm run audit:mobile`. Reports appear in `test-results/`.
+Playwright uses a running server on port 3000 or starts one. For a mobile Lighthouse audit, start the production build with `npm run start -- --port 3200` and run `npm run audit:mobile`. Reports are written to `test-results/`.
