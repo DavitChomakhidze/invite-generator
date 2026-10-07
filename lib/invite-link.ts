@@ -1,4 +1,9 @@
-import { invitationSchema, type InvitationInput } from "@/lib/invitation";
+import { invitationSchema } from "@/lib/invitation";
+import {
+  normalizedInvitationSchema,
+  normalizeLegacyInvitation,
+  type NormalizedInvitation,
+} from "@/lib/invitation-model";
 
 export const MAX_FRAGMENT_LENGTH = 8192;
 const MAX_DECODED_BYTES = 16384;
@@ -29,9 +34,9 @@ async function readBounded(stream: ReadableStream<Uint8Array>, limit: number) {
 
 /** The fragment stays in the browser: no invitation contents are sent to a server. */
 export async function encodeInvitation(
-  input: InvitationInput,
+  input: NormalizedInvitation,
 ): Promise<string> {
-  const invite = invitationSchema.parse(input);
+  const invite = normalizedInvitationSchema.parse(input);
   const bytes = new TextEncoder().encode(JSON.stringify(invite));
   if (bytes.length > MAX_DECODED_BYTES)
     throw new Error("Please shorten your invitation details.");
@@ -43,7 +48,7 @@ export async function encodeInvitation(
     .replaceAll("+", "-")
     .replaceAll("/", "_")
     .replace(/=+$/, "");
-  const fragment = `v1.${payload}`;
+  const fragment = `v2.${payload}`;
   if (fragment.length > MAX_FRAGMENT_LENGTH)
     throw new Error(
       "The link is too long. Please shorten your message or use a shorter Google Maps share link.",
@@ -53,12 +58,20 @@ export async function encodeInvitation(
 
 export async function decodeInvitation(
   fragment: string,
-): Promise<InvitationInput> {
+): Promise<NormalizedInvitation> {
   const value = fragment.replace(/^#/, "");
-  if (value.length > MAX_FRAGMENT_LENGTH || !/^v1\.[A-Za-z0-9_-]+$/.test(value))
+  if (
+    value.length > MAX_FRAGMENT_LENGTH ||
+    !/^v\d+\.[A-Za-z0-9_-]+$/.test(value)
+  )
     throw new Error("This invitation link is incomplete or invalid.");
+  const [version, payload] = value.split(".");
+  if (version !== "v1" && version !== "v2")
+    throw new Error(
+      "This invitation uses an unsupported link version. Ask your host for a new link.",
+    );
   try {
-    const encoded = value.slice(3).replaceAll("-", "+").replaceAll("_", "/");
+    const encoded = payload.replaceAll("-", "+").replaceAll("_", "/");
     const bytes = Uint8Array.from(atob(encoded), (character) =>
       character.charCodeAt(0),
     );
@@ -66,9 +79,12 @@ export async function decodeInvitation(
       new Blob([bytes]).stream().pipeThrough(new DecompressionStream("gzip")),
       MAX_DECODED_BYTES,
     );
-    return invitationSchema.parse(
-      JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(decoded)),
+    const data: unknown = JSON.parse(
+      new TextDecoder("utf-8", { fatal: true }).decode(decoded),
     );
+    return version === "v1"
+      ? normalizeLegacyInvitation(invitationSchema.parse(data))
+      : normalizedInvitationSchema.parse(data);
   } catch {
     throw new Error(
       "This invitation link is incomplete or invalid. Ask your host to send the full link again.",

@@ -1,0 +1,26 @@
+{
+  "portraits": [
+    {
+      "file": "/images/demo-portrait.svg",
+      "title": "Illustrated demo portrait",
+      "source": "Original vector artwork created for this repository; no third-party image or reference used.",
+      "license": "CC0-1.0",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "note": "Fictional illustrated person. Not a photo of the invitation host."
+    }
+  ],
+  "decorations": [
+    {
+      "files": [
+        "/images/story-stars.svg",
+        "components/scroll-story/party-art.tsx"
+      ],
+      "title": "Scrapbook party decorations",
+      "source": "Original code-native vector artwork created for this repository. General scrapbook/disco styling follows the user-provided video reference; no assets were extracted or traced.",
+      "license": "CC0-1.0",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/"
+    }
+  ],
+  "music": [],
+  "music_note": "No locally available music has documented redistribution rights. The production catalog remains empty."
+}

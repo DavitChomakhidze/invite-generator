@@ -1,5 +1,24 @@
 @import "tailwindcss";
 
+.style-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; clear: both; }
+.style-options label { display: flex; align-items: flex-start; gap: 8px; padding: 13px 10px; border: 1px solid #e6dedf; border-radius: 8px; cursor: pointer; }
+.style-options label.selected { border-color: #9a506b; background: #faf0f3; }
+.style-options input { margin-top: 3px; accent-color: #9a506b; }
+.style-options strong { display: block; font-size: 12px; }
+.style-options small { display: block; margin-top: 5px; font-size: 11px; color: #75636d; line-height: 1.5; }
+.story-preview-stage { background: #eee7ef; border: 1px solid #e7dfe9; border-radius: 15px; padding: 12px; }
+.story-preview-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 11px; color: #795b73; }
+.story-phone { width: 100%; max-width: 390px; height: 640px; margin: auto; overflow-y: auto; overscroll-behavior: contain; border: 1px solid #cfb7c2; border-radius: 22px; background: #fcfaf7; }
+.story-phone:focus-visible { outline: 2px solid #9a506b; outline-offset: 3px; }
+.guest-story .guest-main { max-width: none; padding: 0; margin: 0; }
+.guest-story .guest-header { max-width: 1000px; }
+.music-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px; border: 1px solid #cfb7c2; border-radius: 12px; background: #fffaf6; font-size: 12px; }
+.music-controls button { min-height: 44px; padding: 8px 12px; border: 1px solid #cfb7c2; border-radius: 8px; background: #fcfaf7; color: #804459; }
+.music-controls p { padding: 4px; line-height: 1.5; }
+.music-attribution { font-size: 11px; color: #75636d; background: #fffaf6; padding: 8px; }
+.segment-editor { margin-top: 16px; }
+@media (max-width: 375px) { .style-options { grid-template-columns: 1fr; } .story-preview-stage { padding: 8px; } }
+
 @theme inline {
   --color-cream: #fcfaf7;
   --color-plum: #47333f;

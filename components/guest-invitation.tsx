@@ -1,12 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { InvitationCard } from "@/components/invitation-card";
+import { InvitationRenderer } from "@/components/invitation-renderer";
 import { decodeInvitation } from "@/lib/invite-link";
-import type { InvitationInput } from "@/lib/invitation";
+import type { NormalizedInvitation } from "@/lib/invitation-model";
 
 export function GuestInvitation() {
-  const [invite, setInvite] = useState<InvitationInput | null>(null);
+  const [invite, setInvite] = useState<NormalizedInvitation | null>(null);
   const [error, setError] = useState("");
   const [revision, setRevision] = useState(0);
   useEffect(() => {
@@ -14,6 +14,8 @@ export function GuestInvitation() {
     let generation = 0;
     async function load() {
       const current = ++generation;
+      setInvite(null);
+      setError("");
       try {
         const data = await decodeInvitation(window.location.hash);
         if (active && current === generation) {
@@ -40,7 +42,9 @@ export function GuestInvitation() {
     };
   }, []);
   return (
-    <div className="guest-page">
+    <div
+      className={`guest-page ${invite?.style === "scroll" ? "guest-story" : ""}`}
+    >
       <header className="guest-header">
         <span className="guest-edition">A SPECIAL CELEBRATION</span>
         <span>An invitation for you</span>
@@ -52,7 +56,7 @@ export function GuestInvitation() {
               You’re invited to {invite.host_name}’s{" "}
               {invite.event_title || "Birthday celebration"}
             </h1>
-            <InvitationCard key={revision} invite={invite} />
+            <InvitationRenderer key={revision} invite={invite} />
           </>
         ) : error ? (
           <section className="status-card">

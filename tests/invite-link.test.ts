@@ -5,9 +5,29 @@ import {
   decodeInvitation,
   MAX_FRAGMENT_LENGTH,
 } from "@/lib/invite-link";
-import { sampleInvitation } from "@/lib/presentation";
+import { sampleInvitation as sample } from "@/lib/presentation";
+import { defaultScrollSettings } from "@/lib/invitation-model";
+import { legacyFragment } from "./fixtures/legacy-invitation";
+const sampleInvitation = { ...sample, style: "card" as const };
 
 describe("self-contained invitation links", () => {
+  it("decodes the frozen legacy link as a card", async () => {
+    expect(await decodeInvitation(legacyFragment)).toEqual(sampleInvitation);
+  });
+  it("round trips scroll settings", async () => {
+    const invite = {
+      ...sample,
+      style: "scroll" as const,
+      scroll: {
+        ...defaultScrollSettings(),
+        age: 16,
+        closing_message: "See you there!",
+      },
+    };
+    expect(await decodeInvitation(await encodeInvitation(invite))).toEqual(
+      invite,
+    );
+  });
   it("round trips every detail, including Unicode and line breaks", async () => {
     const invite = {
       ...sampleInvitation,
@@ -17,7 +37,7 @@ describe("self-contained invitation links", () => {
       dress_code: "Pink & cream",
     };
     const link = await encodeInvitation(invite);
-    expect(link).toMatch(/^v1\.[A-Za-z0-9_-]+$/);
+    expect(link).toMatch(/^v2\.[A-Za-z0-9_-]+$/);
     expect(link.length).toBeLessThan(1200);
     expect(await decodeInvitation(`#${link}`)).toEqual(invite);
   });
@@ -63,5 +83,22 @@ describe("self-contained invitation links", () => {
       JSON.stringify({ ...sampleInvitation, maps_url: "javascript:alert(1)" }),
     ).toString("base64url");
     await expect(decodeInvitation(`v1.${invalid}`)).rejects.toThrow();
+  });
+  it("rejects v2 invalid styles and invalid UTF-8", async () => {
+    const invalid = gzipSync(
+      JSON.stringify({ ...sampleInvitation, style: "other" }),
+    ).toString("base64url");
+    await expect(decodeInvitation(`v2.${invalid}`)).rejects.toThrow();
+    await expect(
+      decodeInvitation(
+        `v2.${gzipSync(Buffer.from([0xff])).toString("base64url")}`,
+      ),
+    ).rejects.toThrow();
+  });
+  it("rejects fragments at and over the encoded boundary without allocating huge decoded data", async () => {
+    for (const length of [MAX_FRAGMENT_LENGTH, MAX_FRAGMENT_LENGTH + 1])
+      await expect(
+        decodeInvitation(`v2.${"a".repeat(length - 3)}`),
+      ).rejects.toThrow();
   });
 });

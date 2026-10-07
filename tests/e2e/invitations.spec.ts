@@ -40,7 +40,7 @@ test("create and open a self-contained invitation in a fresh browser without res
   });
   const link = await create(page);
   expect(new URL(link).pathname).toBe("/invite");
-  expect(new URL(link).hash).toMatch(/^#v1\./);
+  expect(new URL(link).hash).toMatch(/^#v2\./);
   await expect(
     page.getByRole("link", { name: "Take a look at your invitation" }),
   ).toHaveAttribute("href", link);

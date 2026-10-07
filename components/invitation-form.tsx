@@ -2,10 +2,33 @@
 
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
-import type { FieldErrors, InvitationInput } from "@/lib/invitation";
+import type { InvitationInput } from "@/lib/invitation";
 import { emptyInvitation, sampleInvitation } from "@/lib/presentation";
-import { InvitationCard } from "@/components/invitation-card";
+import { SharedEventFields } from "@/components/shared-event-fields";
+import { InvitationStyleSelector } from "@/components/invitation-style-selector";
+import { InvitationPreview } from "@/components/invitation-preview";
+import dynamic from "next/dynamic";
+import {
+  type InvitationErrors,
+  type InvitationStyle,
+  type NormalizedInvitation,
+} from "@/lib/invitation-model";
+import {
+  defaultScrollDraft,
+  scrollDraftSettings,
+  type ScrollDraft,
+} from "@/lib/scroll-draft";
+const ScrollSettingsFields = dynamic(
+  () =>
+    import("@/components/scroll-settings-fields").then(
+      (m) => m.ScrollSettingsFields,
+    ),
+  {
+    loading: () => <p role="status">Loading story settings…</p>,
+  },
+);
 import { ShareControls } from "@/components/share-controls";
+import { isPortraitUrl } from "@/lib/portrait";
 import { useBrowser } from "@/lib/use-browser";
 
 export function InvitationForm() {
@@ -20,10 +43,12 @@ export function InvitationForm() {
       draft.time_zone ||
       (browser ? Intl.DateTimeFormat().resolvedOptions().timeZone : "UTC"),
   };
-  const [errors, setErrors] = useState<FieldErrors>({});
+  const [style, setStyle] = useState<InvitationStyle>("card");
+  const [scrollDraft, setScrollDraft] =
+    useState<ScrollDraft>(defaultScrollDraft);
+  const [errors, setErrors] = useState<InvitationErrors>({});
   const [message, setMessage] = useState("");
   const [pending, setPending] = useState(false);
-  const [previewOpen, setPreviewOpen] = useState(false);
   const [success, setSuccess] = useState<{
     guestUrl: string;
   } | null>(null);
@@ -35,44 +60,27 @@ export function InvitationForm() {
     [browser],
   );
   const formRef = useRef<HTMLFormElement>(null);
+  const errorFocus = useRef<string | null>(null);
   const submitting = useRef(false);
   const successRef = useRef<HTMLElement>(null);
   useEffect(() => {
     if (success) successRef.current?.focus();
   }, [success]);
+  useEffect(() => {
+    // Wait for errors and enabled controls to commit before focusing a field.
+    if (pending || !errorFocus.current) return;
+    const key = errorFocus.current;
+    errorFocus.current = null;
+    formRef.current?.querySelector<HTMLElement>(`[name="${key}"]`)?.focus();
+  }, [errors, pending]);
 
   function change(key: keyof InvitationInput, value: string) {
     setValues((previous) => ({ ...previous, [key]: value }));
     setErrors((previous) => ({ ...previous, [key]: undefined }));
     setMessage("");
   }
-  function field(key: keyof InvitationInput) {
-    return {
-      id: key,
-      name: key,
-      value: values[key],
-      onChange: (
-        event: React.ChangeEvent<
-          HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-        >,
-      ) => change(key, event.target.value),
-      "aria-invalid": Boolean(errors[key]),
-      "aria-describedby": errors[key] ? `${key}-error` : undefined,
-    };
-  }
-  function error(key: keyof InvitationInput) {
-    return errors[key] ? (
-      <p className="field-error" id={`${key}-error`}>
-        {errors[key]}
-      </p>
-    ) : null;
-  }
-  function focusError(next: FieldErrors = {}) {
-    const key = Object.keys(next)[0];
-    if (key)
-      requestAnimationFrame(() =>
-        formRef.current?.querySelector<HTMLElement>(`[name="${key}"]`)?.focus(),
-      );
+  function focusError(next: InvitationErrors = {}) {
+    errorFocus.current = Object.keys(next)[0] || null;
   }
   async function submit(event: FormEvent) {
     event.preventDefault();
@@ -82,8 +90,13 @@ export function InvitationForm() {
     setMessage("");
     setErrors({});
     try {
-      const { validateInvitation } = await import("@/lib/invitation");
-      const validated = validateInvitation(values);
+      const { validateNormalizedInvitation } =
+        await import("@/lib/invitation-model");
+      const candidate =
+        style === "card"
+          ? { ...values, style }
+          : { ...values, style, scroll: scrollDraftSettings(scrollDraft) };
+      const validated = validateNormalizedInvitation(candidate);
       if (!validated.ok) {
         setErrors(validated.errors || {});
         setMessage(validated.message);
@@ -120,6 +133,29 @@ export function InvitationForm() {
     preview.event_title = values.event_title;
   }
 
+  const previewSettings = scrollDraftSettings(scrollDraft);
+  const previewInvite: NormalizedInvitation =
+    style === "card"
+      ? { ...preview, style }
+      : {
+          ...preview,
+          style,
+          scroll: {
+            ...previewSettings,
+            age:
+              Number.isInteger(previewSettings.age) &&
+              previewSettings.age! >= 1 &&
+              previewSettings.age! <= 150
+                ? previewSettings.age
+                : undefined,
+            portrait:
+              previewSettings.portrait.kind === "remote" &&
+              !isPortraitUrl(previewSettings.portrait.url)
+                ? { kind: "default" }
+                : previewSettings.portrait,
+          },
+        };
+
   return (
     <div className="studio-grid">
       <div className="editor-column">
@@ -154,6 +190,7 @@ export function InvitationForm() {
               type="button"
               onClick={() => {
                 setSuccess(null);
+                setScrollDraft(defaultScrollDraft());
                 setValues((previous) => ({
                   ...emptyInvitation,
                   time_zone: previous.time_zone,
@@ -178,127 +215,34 @@ export function InvitationForm() {
                 </p>
               </div>
             </div>
-            <fieldset disabled={!browser || pending}>
-              <legend>
-                <span>01</span> The birthday details
-              </legend>
-              <div className="form-field">
-                <label htmlFor="host_name">
-                  Name to celebrate <span className="required">*</span>
-                </label>
-                <input
-                  {...field("host_name")}
-                  placeholder="e.g. Isabella"
-                  maxLength={80}
-                  autoComplete="given-name"
-                  required
-                />
-                {error("host_name")}
-              </div>
-              <div className="field-row">
-                <div className="form-field">
-                  <label htmlFor="event_date">
-                    The date <span className="required">*</span>
-                  </label>
-                  <input {...field("event_date")} type="date" required />
-                  {error("event_date")}
-                </div>
-                <div className="form-field">
-                  <label htmlFor="event_time">
-                    The time <span className="required">*</span>
-                  </label>
-                  <input {...field("event_time")} type="time" required />
-                  {error("event_time")}
-                </div>
-              </div>
-              <div className="form-field timezone-field">
-                <label htmlFor="time_zone">Event timezone</label>
-                <div className="select-wrap">
-                  <select {...field("time_zone")}>
-                    {[...new Set([values.time_zone, ...zones])].map((zone) => (
-                      <option key={zone} value={zone}>
-                        {zone.replaceAll("_", " ")}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                {error("time_zone")}
-              </div>
-            </fieldset>
-            <fieldset disabled={!browser || pending}>
-              <legend>
-                <span>02</span> The lovely location
-              </legend>
-              <div className="form-field">
-                <label htmlFor="address">
-                  Venue or address <span className="required">*</span>
-                </label>
-                <div className="address-input">
-                  <input
-                    {...field("address")}
-                    placeholder="e.g. The Rose Garden, 24 Bloom Street"
-                    maxLength={300}
-                    required
-                  />
-                </div>
-                {error("address")}
-              </div>
-              <div className="form-field">
-                <label htmlFor="maps_url">
-                  Google Maps link <span className="required">*</span>
-                </label>
-                <input
-                  {...field("maps_url")}
-                  type="url"
-                  placeholder="https://maps.app.goo.gl/…"
-                  maxLength={2048}
-                  required
-                />
-                {error("maps_url")}
-                <p className="field-help">
-                  Find your venue in Google Maps → Share → Copy link.
-                </p>
-              </div>
-            </fieldset>
-            <fieldset disabled={!browser || pending}>
-              <legend>
-                <span>03</span> A personal touch{" "}
-                <span className="optional-tag">OPTIONAL</span>
-              </legend>
-              <div className="form-field">
-                <label htmlFor="message">A little note to your guests </label>
-                <textarea
-                  {...field("message")}
-                  placeholder="A little sparkle, a lot of love, and my favorite people…"
-                  rows={3}
-                  maxLength={600}
-                />
-                <div className="textarea-footer">
-                  {error("message")}
-                  <span>{values.message.length}/600</span>
-                </div>
-              </div>
-              <div className="field-row">
-                <div className="form-field">
-                  <label htmlFor="event_title">Event title</label>
-                  <input
-                    {...field("event_title")}
-                    placeholder="Birthday celebration"
-                    maxLength={100}
-                  />
-                  {error("event_title")}
-                </div>
-                <div className="form-field">
-                  <label htmlFor="dress_code">Dress code</label>
-                  <input
-                    {...field("dress_code")}
-                    placeholder="e.g. A touch of pink"
-                    maxLength={100}
-                  />
-                  {error("dress_code")}
-                </div>
-              </div>
-            </fieldset>
+            <InvitationStyleSelector
+              value={style}
+              disabled={!browser || pending}
+              onChange={(next) => {
+                setStyle(next);
+                setErrors({});
+                setMessage("");
+              }}
+            />
+            <SharedEventFields
+              values={values}
+              errors={errors}
+              onChange={change}
+              zones={zones}
+              disabled={!browser || pending}
+            />
+            {style === "scroll" && (
+              <ScrollSettingsFields
+                draft={scrollDraft}
+                onChange={(next) => {
+                  setScrollDraft(next);
+                  setErrors({});
+                  setMessage("");
+                }}
+                errors={errors}
+                disabled={!browser || pending}
+              />
+            )}
             {message && (
               <p
                 className={`form-notice ${message.startsWith("Saved!") ? "is-success" : ""}`}
@@ -330,40 +274,7 @@ export function InvitationForm() {
           <span>Made for your once-in-a-lifetime kind of moment.</span>
         </div>
       </div>
-      <aside
-        id="experience"
-        className={`preview-column ${previewOpen ? "preview-open" : ""}`}
-        aria-label="Invitation preview"
-      >
-        <div className="preview-heading">
-          <span>
-            <span className="live-dot" /> LIVE PREVIEW
-          </span>
-          <button
-            className="preview-toggle"
-            type="button"
-            onClick={() => setPreviewOpen(!previewOpen)}
-            aria-expanded={previewOpen}
-            aria-controls="preview-content"
-          >
-            {previewOpen ? "Hide preview" : "Show preview"}
-          </button>
-          <span className="desktop-preview-note">See how it opens</span>
-        </div>
-        <div id="preview-content" className="preview-content">
-          <div className="preview-stage">
-            <div className="preview-sticker">made just for you</div>
-            <InvitationCard
-              key={previewOpen ? "open" : "closed"}
-              invite={preview}
-              preview
-            />
-          </div>
-          <p className="preview-caption">
-            A preview of the invitation your guests will open.
-          </p>
-        </div>
-      </aside>
+      <InvitationPreview invite={previewInvite} />
     </div>
   );
 }
