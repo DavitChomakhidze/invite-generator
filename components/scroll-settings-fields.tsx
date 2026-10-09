@@ -84,6 +84,23 @@ export function ScrollSettingsFields({
         />
         {error("scroll.closing_message")}
       </div>
+      <div className="form-field">
+        <label className="checkbox-field">
+          <input
+            type="checkbox"
+            name="scroll.collect_rsvp"
+            checked={draft.collect_rsvp}
+            onChange={(e) =>
+              onChange({ ...draft, collect_rsvp: e.target.checked })
+            }
+          />
+          Let guests accept or decline
+        </label>
+        <p className="field-help">
+          Guests add their name when they reply. You’ll get a private link to
+          see who’s coming.
+        </p>
+      </div>
       <MusicSegmentSelector
         value={draft.music}
         onChange={(music) => onChange({ ...draft, music })}

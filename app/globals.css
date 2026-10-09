@@ -17,6 +17,21 @@
 .music-controls p { padding: 4px; line-height: 1.5; }
 .music-attribution { font-size: 11px; color: #75636d; background: #fffaf6; padding: 8px; }
 .segment-editor { margin-top: 16px; }
+.form-field .checkbox-field { font-size: 12px; gap: 8px; margin-bottom: 4px; cursor: pointer; }
+.form-field .checkbox-field input { width: 18px; min-height: 18px; height: 18px; padding: 0; accent-color: #9a506b; }
+.responses-page { max-width: 560px; margin: 20px auto 60px; padding: 0 24px; }
+.responses-card { background: #fffefd; border: 1px solid var(--border); border-radius: 12px; padding: 28px 22px; }
+.responses-card h1 { font-family: var(--serif); font-size: 32px; font-weight: 500; margin: 8px 0 6px; }
+.responses-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 20px 0; }
+.responses-summary div { padding: 14px; border-radius: 9px; background: #faf0f3; text-align: center; }
+.responses-summary strong { display: block; font-size: 28px; color: var(--rose-dark); }
+.responses-summary span { font-size: 11px; color: var(--muted); }
+.responses-list { list-style: none; margin: 0; padding: 0; }
+.responses-list li { display: flex; justify-content: space-between; gap: 12px; padding: 12px 2px; border-top: 1px solid var(--border); font-size: 13px; }
+.responses-list li > span:last-child { font-size: 11px; color: var(--muted); white-space: nowrap; }
+.responses-list h2 { font-size: 12px; letter-spacing: 1.5px; color: var(--muted); margin: 22px 0 6px; }
+.responses-saved { list-style: none; margin: 12px 0 0; padding: 0; }
+.responses-saved li { border-top: 1px solid var(--border); }
 @media (max-width: 375px) { .style-options { grid-template-columns: 1fr; } .story-preview-stage { padding: 8px; } }
 
 @theme inline {

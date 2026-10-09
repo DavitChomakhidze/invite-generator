@@ -7,15 +7,23 @@ import {
 } from "@/lib/presentation";
 import { StorySection } from "./story-section";
 import { PartyGlass, RibbonBow } from "./party-art";
+import { StoryRsvp } from "./story-rsvp";
 import styles from "./story.module.css";
 
 export function StorySections({
   invite,
   scrollRoot,
+  preview = false,
 }: {
   invite: ScrollInvitationData;
   scrollRoot?: RefObject<HTMLDivElement | null>;
+  preview?: boolean;
 }) {
+  const sectionNumber = (index: number) => String(index).padStart(2, "0");
+  let nextNumber = invite.dress_code ? 5 : 4;
+  const rsvpNumber = invite.scroll.rsvp_id ? nextNumber++ : 0;
+  const closingNumber = nextNumber;
+  const tint = (index: number) => index % 2 === 0;
   return (
     <>
       <StorySection
@@ -83,11 +91,25 @@ export function StorySections({
           <p className={styles.dressCode}>{invite.dress_code}</p>
         </StorySection>
       )}
+      {invite.scroll.rsvp_id && (
+        <StorySection
+          label="Reply to the invitation"
+          number={sectionNumber(rsvpNumber)}
+          scrollRoot={scrollRoot}
+          tinted={tint(rsvpNumber)}
+        >
+          <h2 className={styles.eyebrow}>KINDLY REPLY</h2>
+          <p className={styles.heading}>
+            Will you <em>be there?</em>
+          </p>
+          <StoryRsvp inviteId={invite.scroll.rsvp_id} preview={preview} />
+        </StorySection>
+      )}
       <StorySection
         label="Closing message"
-        number={invite.dress_code ? "05" : "04"}
+        number={sectionNumber(closingNumber)}
         scrollRoot={scrollRoot}
-        tinted={!invite.dress_code}
+        tinted={tint(closingNumber)}
       >
         <PartyGlass className={styles.closingGlass} />
         <p className={styles.eyebrow}>LET’S MAKE A LITTLE BIRTHDAY HISTORY</p>

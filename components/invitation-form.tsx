@@ -51,6 +51,7 @@ export function InvitationForm() {
   const [pending, setPending] = useState(false);
   const [success, setSuccess] = useState<{
     guestUrl: string;
+    responsesUrl?: string;
   } | null>(null);
   const zones = useMemo(
     () =>
@@ -92,10 +93,21 @@ export function InvitationForm() {
     try {
       const { validateNormalizedInvitation } =
         await import("@/lib/invitation-model");
+      const rsvp =
+        style === "scroll" && scrollDraft.collect_rsvp
+          ? await import("@/lib/rsvp").then((m) => m.createRsvpKeys())
+          : null;
       const candidate =
         style === "card"
           ? { ...values, style }
-          : { ...values, style, scroll: scrollDraftSettings(scrollDraft) };
+          : {
+              ...values,
+              style,
+              scroll: {
+                ...scrollDraftSettings(scrollDraft),
+                rsvp_id: rsvp?.id,
+              },
+            };
       const validated = validateNormalizedInvitation(candidate);
       if (!validated.ok) {
         setErrors(validated.errors || {});
@@ -107,7 +119,24 @@ export function InvitationForm() {
       const fragment = await encodeInvitation(validated.data);
       const url = new URL("/invite", window.location.origin);
       url.hash = fragment;
-      setSuccess({ guestUrl: url.href });
+      if (!rsvp) {
+        setSuccess({ guestUrl: url.href });
+        return;
+      }
+      const [{ responsesUrl }, { saveHostInvite }] = await Promise.all([
+        import("@/lib/rsvp"),
+        import("@/lib/rsvp-local"),
+      ]);
+      saveHostInvite({
+        secret: rsvp.secret,
+        host_name: validated.data.host_name,
+        event_title: validated.data.event_title,
+        event_date: validated.data.event_date,
+      });
+      setSuccess({
+        guestUrl: url.href,
+        responsesUrl: responsesUrl(window.location.origin, rsvp.secret),
+      });
     } catch (error) {
       setMessage(
         error instanceof Error
@@ -153,6 +182,8 @@ export function InvitationForm() {
               !isPortraitUrl(previewSettings.portrait.url)
                 ? { kind: "default" }
                 : previewSettings.portrait,
+            // The preview shows a disabled RSVP section; the real id is created on submit.
+            rsvp_id: scrollDraft.collect_rsvp ? "preview" : undefined,
           },
         };
 
@@ -173,6 +204,28 @@ export function InvitationForm() {
             <Link className="text-link" href={success.guestUrl} target="_blank">
               Take a look at your invitation{" "}
             </Link>
+            {success.responsesUrl && (
+              <div className="private-link-panel">
+                <h3>See who’s coming</h3>
+                <p>
+                  This private link shows every accept and decline. Keep it to
+                  yourself — don’t send it to guests. It’s also remembered in
+                  this browser.
+                </p>
+                <ShareControls
+                  url={success.responsesUrl}
+                  label="Your private responses link"
+                  copyLabel="Copy responses link"
+                />
+                <Link
+                  className="text-link"
+                  href={success.responsesUrl}
+                  target="_blank"
+                >
+                  Open responses
+                </Link>
+              </div>
+            )}
             <p className="link-explanation">
               Keep this link: it contains your invitation. If plans change,
               create and share a new link. Previously shared links stay

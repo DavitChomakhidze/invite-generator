@@ -6,6 +6,7 @@ import {
 } from "@/lib/invitation";
 import { findMusicTrack } from "@/lib/music-catalog";
 import { isPortraitUrl } from "@/lib/portrait";
+import { rsvpIdSchema } from "@/lib/rsvp";
 
 export const portraitSchema = z.discriminatedUnion("kind", [
   z.object({ kind: z.literal("default") }),
@@ -64,6 +65,8 @@ export const scrollSettingsSchema = z.object({
     .max(300, "Keep the closing message under 300 characters.")
     .default(""),
   music: musicSegmentSchema.nullable().default(null),
+  // Present only when the host chose to collect replies; links without it show no RSVP section.
+  rsvp_id: rsvpIdSchema.optional(),
 });
 
 export const normalizedInvitationSchema = z.discriminatedUnion("style", [

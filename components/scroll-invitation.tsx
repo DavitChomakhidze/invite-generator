@@ -111,7 +111,11 @@ function Story({
       />
       {opened && (
         <div ref={sections} tabIndex={-1} className={styles.sections}>
-          <StorySections invite={invite} scrollRoot={scrollRoot} />
+          <StorySections
+            invite={invite}
+            scrollRoot={scrollRoot}
+            preview={preview}
+          />
         </div>
       )}
       {opened && musicControls && (

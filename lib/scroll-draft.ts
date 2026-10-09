@@ -5,9 +5,16 @@ export type ScrollDraft = {
   portrait_url: string;
   closing_message: string;
   music: ScrollSettings["music"];
+  collect_rsvp: boolean;
 };
 export function defaultScrollDraft(): ScrollDraft {
-  return { age: "", portrait_url: "", closing_message: "", music: null };
+  return {
+    age: "",
+    portrait_url: "",
+    closing_message: "",
+    music: null,
+    collect_rsvp: true,
+  };
 }
 export function scrollDraftSettings(draft: ScrollDraft): ScrollSettings {
   return {

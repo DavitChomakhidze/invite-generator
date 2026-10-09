@@ -118,10 +118,7 @@
   object-fit: cover;
   display: block;
   border-radius: 47% 44% 39% 43% / 38% 43% 32% 34%;
-  border: 5px solid #fff;
   filter: grayscale(1);
-  box-shadow: 3px 5px 0 #a5639252;
-  background: #eee;
 }
 .partyHat {
   position: absolute;
@@ -273,6 +270,85 @@
   text-decoration: underline;
   text-underline-offset: 4px;
   font-size: 13px;
+}
+.secondaryAction {
+  min-height: 46px;
+  padding: 11px 22px;
+  border: 1px solid #9d306b;
+  border-radius: 5px;
+  background: #fff0fa;
+  box-shadow: 3px 3px 0 #d89bbb;
+  color: #8b295d;
+  font-size: 14px;
+  font-weight: 700;
+}
+.secondaryAction:focus-visible {
+  outline: 3px solid #53255f;
+  outline-offset: 5px;
+}
+.rsvp {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  max-width: 340px;
+  margin: 8px auto 0;
+}
+.rsvp .quietAction {
+  background: transparent;
+}
+.rsvpChoices {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 6px;
+}
+.rsvpNote {
+  font-size: 15px;
+  line-height: 1.5;
+}
+.rsvpLabel {
+  align-self: flex-start;
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.rsvpInput {
+  width: 100%;
+  min-height: 46px;
+  padding: 10px 14px;
+  border: 2px solid #d997bf;
+  border-radius: 5px;
+  background: #fffafd;
+  color: var(--ink);
+  font-size: 16px;
+}
+.rsvpInput:focus {
+  outline: 3px solid #9d306b;
+  outline-offset: 2px;
+}
+.rsvpInput[aria-invalid="true"] {
+  border-color: #b3234f;
+}
+.rsvpError {
+  align-self: flex-start;
+  color: #9c1f47;
+  font-size: 13px;
+  font-weight: 650;
+}
+.rsvpDone {
+  display: inline-block;
+  font-size: 19px;
+  font-weight: 750;
+  padding: 8px 16px;
+  background: #fff0fa;
+  box-shadow: 3px 3px 0 #d289b8;
+  transform: rotate(-2deg);
+}
+.rsvpDone:focus {
+  outline: none;
 }
 .scrollCue {
   color: var(--ink);

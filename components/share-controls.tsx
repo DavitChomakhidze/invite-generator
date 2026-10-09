@@ -4,9 +4,11 @@ import { useRef, useState } from "react";
 export function ShareControls({
   url,
   label = "Invitation link",
+  copyLabel = "Copy invitation link",
 }: {
   url: string;
   label?: string;
+  copyLabel?: string;
 }) {
   const [status, setStatus] = useState("");
   const input = useRef<HTMLInputElement>(null);
@@ -47,7 +49,7 @@ export function ShareControls({
       </label>
       <div className="share-actions">
         <button type="button" className="button primary" onClick={copy}>
-          {status === "Copied!" ? "Copied!" : "Copy invitation link"}
+          {status === "Copied!" ? "Copied!" : copyLabel}
         </button>
         <button type="button" className="button secondary" onClick={share}>
           Share
