@@ -44,25 +44,53 @@ describe("RSVP in invitation links", () => {
   const invite = {
     ...sampleInvitation,
     style: "scroll" as const,
+    rsvp_id: randomToken(),
     scroll: {
       portrait: { kind: "default" as const },
       closing_message: "",
       music: null,
-      rsvp_id: randomToken(),
     },
   };
-  it("round-trips the reply id but never the host secret", async () => {
+  it("round-trips the reply id for story invitations", async () => {
     expect(await decodeInvitation(await encodeInvitation(invite))).toEqual(
       invite,
     );
   });
+  it("round-trips the reply id for card invitations", async () => {
+    const card = {
+      ...sampleInvitation,
+      style: "card" as const,
+      rsvp_id: randomToken(),
+    };
+    expect(await decodeInvitation(await encodeInvitation(card))).toEqual(card);
+  });
   it("rejects a malformed reply id", async () => {
     await expect(
-      encodeInvitation({
-        ...invite,
-        scroll: { ...invite.scroll, rsvp_id: "not valid" },
-      }),
+      encodeInvitation({ ...invite, rsvp_id: "not valid" }),
     ).rejects.toThrow();
+  });
+});
+
+describe("RSVP retention", () => {
+  const day = 24 * 60 * 60;
+  const now = Date.UTC(2027, 0, 1);
+  it("keeps replies until 20 days after the event", async () => {
+    const { retentionSeconds } = await import("@/lib/rsvp-store");
+    const event_at = now + 30 * day * 1000;
+    expect(retentionSeconds({ event_at }, now)).toBe(50 * day);
+  });
+  it("keeps replies at least 20 days, even without or after the event", async () => {
+    const { retentionSeconds } = await import("@/lib/rsvp-store");
+    expect(retentionSeconds({}, now)).toBe(20 * day);
+    expect(retentionSeconds({ event_at: now - 90 * day * 1000 }, now)).toBe(
+      20 * day,
+    );
+  });
+  it("caps retention for far-future events", async () => {
+    const { retentionSeconds } = await import("@/lib/rsvp-store");
+    expect(retentionSeconds({ event_at: now + 5000 * day * 1000 }, now)).toBe(
+      400 * day,
+    );
   });
 });
 

@@ -1,8 +1,10 @@
 import type { RsvpReply, RsvpResponse } from "@/lib/rsvp";
 
 export const MAX_RESPONSES_PER_INVITE = 300;
-// Replies are kept for a little over a year after the latest one, then expire.
-const RESPONSE_TTL_SECONDS = 400 * 24 * 60 * 60;
+const DAY_SECONDS = 24 * 60 * 60;
+export const RETENTION_DAYS_AFTER_EVENT = 20;
+// event_at comes from the guest, so it may only lengthen retention, and only up to this cap.
+const MAX_TTL_SECONDS = 400 * DAY_SECONDS;
 
 export class RsvpStoreError extends Error {
   constructor(
@@ -79,9 +81,10 @@ const keyFor = (inviteId: string) => `rsvp:${inviteId}`;
 
 export async function saveReply(reply: RsvpReply) {
   const key = keyFor(reply.invite_id);
-  const [exists, count] = await run([
+  const [exists, count, currentTtl] = await run([
     ["HEXISTS", key, reply.reply_id],
     ["HLEN", key],
+    ["TTL", key],
   ]);
   if (!Number(exists) && Number(count) >= MAX_RESPONSES_PER_INVITE)
     throw new RsvpStoreError(
@@ -95,8 +98,20 @@ export async function saveReply(reply: RsvpReply) {
   };
   await run([
     ["HSET", key, reply.reply_id, JSON.stringify(value)],
-    ["EXPIRE", key, RESPONSE_TTL_SECONDS],
+    ["EXPIRE", key, Math.max(Number(currentTtl), retentionSeconds(reply))],
   ]);
+}
+
+/** Keep replies until 20 days after the event, and at least 20 days after the latest reply. */
+export function retentionSeconds(
+  { event_at }: Pick<RsvpReply, "event_at">,
+  now = Date.now(),
+) {
+  const minimum = RETENTION_DAYS_AFTER_EVENT * DAY_SECONDS;
+  const afterEvent = event_at
+    ? Math.ceil((event_at - now) / 1000) + minimum
+    : minimum;
+  return Math.min(Math.max(afterEvent, minimum), MAX_TTL_SECONDS);
 }
 
 export async function listReplies(inviteId: string): Promise<RsvpResponse[]> {

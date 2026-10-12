@@ -7,14 +7,28 @@ import {
   formatEventTime,
   isGoogleMapsUrl,
 } from "@/lib/presentation";
-import type { InvitationInput } from "@/lib/invitation";
+import type { CardInvitationData } from "@/lib/invitation-model";
 import { useBrowser } from "@/lib/use-browser";
+import { RsvpReply, type RsvpClasses } from "@/components/rsvp-reply";
+
+const rsvpClasses: RsvpClasses = {
+  root: "card-rsvp",
+  choices: "card-rsvp-choices",
+  primary: "button primary",
+  secondary: "button secondary",
+  quiet: "text-link",
+  note: "card-rsvp-note",
+  label: "card-rsvp-label",
+  input: "card-rsvp-input",
+  error: "field-error",
+  done: "card-rsvp-done",
+};
 
 export function InvitationCard({
   invite,
   preview = false,
 }: {
-  invite: InvitationInput;
+  invite: CardInvitationData;
   preview?: boolean;
 }) {
   const reduced = useReducedMotion();
@@ -164,6 +178,17 @@ export function InvitationCard({
             <span className="map-placeholder">
               Your map link will appear here
             </span>
+          )}
+          {invite.rsvp_id && (
+            <section className="card-rsvp-section" aria-label="Reply">
+              <h3 className="card-rsvp-title">Will you be there?</h3>
+              <RsvpReply
+                inviteId={invite.rsvp_id}
+                event={invite}
+                preview={preview}
+                classes={rsvpClasses}
+              />
+            </section>
           )}
           <p className="invite-signoff">Can’t wait to celebrate with you.</p>
         </div>

@@ -19,6 +19,18 @@
 .segment-editor { margin-top: 16px; }
 .form-field .checkbox-field { font-size: 12px; gap: 8px; margin-bottom: 4px; cursor: pointer; }
 .form-field .checkbox-field input { width: 18px; min-height: 18px; height: 18px; padding: 0; accent-color: #9a506b; }
+.card-rsvp-section { margin-top: 26px; padding-top: 22px; border-top: 1px dashed #e4cdd5; }
+.card-rsvp-title { font-family: var(--serif); font-size: 22px; font-weight: 500; color: var(--plum); }
+.card-rsvp { display: flex; flex-direction: column; align-items: center; gap: 8px; max-width: 300px; margin: 12px auto 0; }
+.card-rsvp-choices { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.card-rsvp-note { font-size: 13px; color: var(--muted); }
+.card-rsvp-label { align-self: flex-start; font-size: 10px; font-weight: 500; color: #6c5763; }
+.card-rsvp-input { width: 100%; min-height: 44px; padding: 10px 12px; border: 1px solid #e6dedf; border-radius: 7px; background: #fffefd; color: var(--plum); font-size: 16px; }
+.card-rsvp-input[aria-invalid="true"] { border-color: #c27a8f; }
+.card-rsvp .field-error { align-self: flex-start; }
+.card-rsvp-done { font-family: var(--serif); font-size: 17px; color: var(--rose-dark); }
+.card-rsvp-done:focus { outline: none; }
+.rsvp-option { margin-top: 18px; }
 .responses-page { max-width: 560px; margin: 20px auto 60px; padding: 0 24px; }
 .responses-card { background: #fffefd; border: 1px solid var(--border); border-radius: 12px; padding: 28px 22px; }
 .responses-card h1 { font-family: var(--serif); font-size: 32px; font-weight: 500; margin: 8px 0 6px; }

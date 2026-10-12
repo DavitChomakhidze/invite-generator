@@ -1,19 +1,38 @@
 "use client";
 import { useEffect, useId, useRef, useState, type FormEvent } from "react";
+import type { InvitationInput } from "@/lib/invitation";
 import { randomToken } from "@/lib/rsvp";
 import { savedGuestReply, saveGuestReply } from "@/lib/rsvp-local";
-import styles from "./story.module.css";
 
 type Reply = { reply_id: string; name: string; attending: boolean };
 
-export function StoryRsvp({
+/** Each invitation style supplies its own look for the same reply flow. */
+export type RsvpClasses = Record<
+  | "root"
+  | "choices"
+  | "primary"
+  | "secondary"
+  | "quiet"
+  | "note"
+  | "label"
+  | "input"
+  | "error"
+  | "done",
+  string
+>;
+
+export function RsvpReply({
   inviteId,
+  event,
+  classes: styles,
   preview = false,
 }: {
   inviteId: string;
+  event: Pick<InvitationInput, "event_date" | "event_time" | "time_zone">;
+  classes: RsvpClasses;
   preview?: boolean;
 }) {
-  // Sections only mount in the browser after the guest opens the story.
+  // Guest invitations only render in the browser, after the link is decoded.
   const [saved, setSaved] = useState<Reply | null>(() =>
     preview || typeof window === "undefined" ? null : savedGuestReply(inviteId),
   );
@@ -30,8 +49,8 @@ export function StoryRsvp({
     if (attending !== null) nameInput.current?.focus();
   }, [attending]);
 
-  async function submit(event: FormEvent) {
-    event.preventDefault();
+  async function submit(formEvent: FormEvent) {
+    formEvent.preventDefault();
     if (pending || attending === null || preview) return;
     const trimmed = name.trim();
     if (!trimmed) {
@@ -48,10 +67,17 @@ export function StoryRsvp({
       attending,
     };
     try {
+      const { eventInstant } = await import("@/lib/invitation");
+      let event_at: number | undefined;
+      try {
+        event_at = eventInstant(event);
+      } catch {
+        // The server falls back to its minimum retention.
+      }
       const response = await fetch("/api/rsvp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ invite_id: inviteId, ...reply }),
+        body: JSON.stringify({ invite_id: inviteId, event_at, ...reply }),
       });
       if (!response.ok) {
         const body = (await response.json().catch(() => ({}))) as {
@@ -77,15 +103,15 @@ export function StoryRsvp({
 
   if (saved && !editing)
     return (
-      <div className={styles.rsvp}>
-        <p ref={status} tabIndex={-1} className={styles.rsvpDone} role="status">
+      <div className={styles.root}>
+        <p ref={status} tabIndex={-1} className={styles.done} role="status">
           {saved.attending
             ? `Yay, ${saved.name}! You’re on the list.`
             : `Thanks for letting us know, ${saved.name}. You’ll be missed!`}
         </p>
         <button
           type="button"
-          className={styles.quietAction}
+          className={styles.quiet}
           onClick={() => {
             setName(saved.name);
             setEditing(true);
@@ -98,11 +124,11 @@ export function StoryRsvp({
 
   if (attending === null)
     return (
-      <div className={styles.rsvp}>
-        <div className={styles.rsvpChoices}>
+      <div className={styles.root}>
+        <div className={styles.choices}>
           <button
             type="button"
-            className={styles.action}
+            className={styles.primary}
             disabled={preview}
             onClick={() => setAttending(true)}
           >
@@ -110,29 +136,29 @@ export function StoryRsvp({
           </button>
           <button
             type="button"
-            className={styles.secondaryAction}
+            className={styles.secondary}
             disabled={preview}
             onClick={() => setAttending(false)}
           >
             Regretfully decline
           </button>
         </div>
-        {preview && <p className={styles.rsvpNote}>Guests will reply here.</p>}
+        {preview && <p className={styles.note}>Guests will reply here.</p>}
       </div>
     );
 
   return (
-    <form className={styles.rsvp} onSubmit={submit} noValidate>
-      <p className={styles.rsvpNote}>
+    <form className={styles.root} onSubmit={submit} noValidate>
+      <p className={styles.note}>
         {attending ? "Wonderful! Who’s coming?" : "Sorry you can’t make it."}
       </p>
-      <label className={styles.rsvpLabel} htmlFor={nameId}>
+      <label className={styles.label} htmlFor={nameId}>
         Your name
       </label>
       <input
         ref={nameInput}
         id={nameId}
-        className={styles.rsvpInput}
+        className={styles.input}
         value={name}
         maxLength={80}
         autoComplete="name"
@@ -144,17 +170,17 @@ export function StoryRsvp({
         }}
       />
       {error && (
-        <p id={`${nameId}-error`} className={styles.rsvpError} role="alert">
+        <p id={`${nameId}-error`} className={styles.error} role="alert">
           {error}
         </p>
       )}
-      <div className={styles.rsvpChoices}>
-        <button type="submit" className={styles.action} disabled={pending}>
+      <div className={styles.choices}>
+        <button type="submit" className={styles.primary} disabled={pending}>
           {pending ? "Sending…" : attending ? "Send my yes" : "Send my regrets"}
         </button>
         <button
           type="button"
-          className={styles.quietAction}
+          className={styles.quiet}
           disabled={pending}
           onClick={() => {
             setAttending(null);

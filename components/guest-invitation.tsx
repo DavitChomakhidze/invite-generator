@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { InvitationRenderer } from "@/components/invitation-renderer";
 import { decodeInvitation } from "@/lib/invite-link";
 import type { NormalizedInvitation } from "@/lib/invitation-model";
@@ -62,9 +61,6 @@ export function GuestInvitation() {
           <section className="status-card">
             <h1>This invitation isn’t available.</h1>
             <p role="alert">{error}</p>
-            <Link href="/" className="text-link">
-              Create an invitation
-            </Link>
           </section>
         ) : (
           <p className="invite-loading" role="status">

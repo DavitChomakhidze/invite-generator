@@ -1,15 +1,23 @@
 import Link from "next/link";
-export function Brand() {
-  return (
-    <Link href="/" className="brand" aria-label="Occasion home">
+export function Brand({ linked = true }: { linked?: boolean }) {
+  const mark = (
+    <>
       occasion<span className="brand-dot">.</span>
+    </>
+  );
+  // Public pages must not lead customers back to the private generator.
+  return linked ? (
+    <Link href="/" className="brand" aria-label="Occasion home">
+      {mark}
     </Link>
+  ) : (
+    <span className="brand">{mark}</span>
   );
 }
 export function Header({ simple = false }: { simple?: boolean }) {
   return (
     <header className="site-header">
-      <Brand />
+      <Brand linked={!simple} />
       <nav aria-label="Main navigation">
         {!simple && (
           <>

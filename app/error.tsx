@@ -1,5 +1,4 @@
 "use client";
-import Link from "next/link";
 
 export default function ErrorPage({ reset }: { reset: () => void }) {
   return (
@@ -12,9 +11,6 @@ export default function ErrorPage({ reset }: { reset: () => void }) {
       <button className="button primary" onClick={reset}>
         Try again
       </button>
-      <Link className="text-link" href="/">
-        Back to occasion
-      </Link>
     </main>
   );
 }

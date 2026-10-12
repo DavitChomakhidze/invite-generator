@@ -7,16 +7,20 @@ A backend-free birthday invitation generator with two styles:
 
 Shared event fields stay intact while switching styles. The generator keeps a live card preview or a scrollable phone preview; previews remain collapsible on mobile. Scroll Story preview stays silent and can be restarted.
 
-There are no accounts or invitation records. Invitation contents live only in the link. The single server-side feature is optional Scroll Story RSVPs (see below), stored in a small Redis key-value store. Nothing reads the retired local `.data/` SQLite files.
+There are no accounts or invitation records. Invitation contents live only in the link. The only server-side parts are optional RSVPs (see below), stored in a small Redis key-value store, and the generator password. Nothing reads the retired local `.data/` SQLite files.
 
-## RSVPs (Scroll Story)
+## Private generator
 
-When "Let guests accept or decline" is checked (the default), generating a Scroll Story creates two links:
+The generator (`/`) is password-protected with HTTP Basic auth; any username works. Set `GENERATOR_PASSWORD` in the hosting environment. In production without it, the generator returns 503 (locked). Locally without it, the generator stays open. Invitations (`/invite`), responses pages (`/responses`) and the reply API stay public, and public pages don't link back to the generator.
+
+## RSVPs
+
+When "Let guests accept or decline" is checked (the default), generating either style creates two links:
 
 - **Guest link:** carries only a public reply ID. Guests choose _Joyfully accept_ or _Regretfully decline_, enter their name and send. Their browser remembers the reply so they can change it later. It updates the same entry instead of adding a duplicate.
 - **Private responses link** (`/responses#<secret>`): shows who is coming and who can't make it. The reply ID is a SHA-256 hash of this secret, so guests cannot read the list. The creator's browser also remembers it at `/responses`.
 
-Only the reply ID, guest name, answer and time are stored. Each invitation accepts up to 300 replies, which expire 400 days after the latest reply. Card invitations and older links show no RSVP section.
+Only the reply ID, guest name, answer and time are stored. Each invitation accepts up to 300 replies. Replies are deleted 20 days after the event, or at least 20 days after the latest reply. The event time comes from the guest's invitation and can only extend retention, up to 400 days. Older links show no RSVP section.
 
 Storage uses the Upstash Redis REST API over `fetch`, with no SDK and no database schema. On Vercel, add an Upstash Redis store from the Marketplace (free tier). It sets `KV_REST_API_URL`/`KV_REST_API_TOKEN`; `UPSTASH_REDIS_REST_URL`/`UPSTASH_REDIS_REST_TOKEN` also work. Without these variables, local development keeps replies in memory until restart, and production returns "Replies aren't set up on this site yet."
 
@@ -29,7 +33,7 @@ npm ci
 npm run dev
 ```
 
-Open `http://localhost:3000`. No environment variables are required. RSVPs use in-memory storage locally. Development uses Webpack because Turbopack hot reload previously crashed on Windows. Production builds use the default Next.js build.
+Open `http://localhost:3000`. No environment variables are required: locally, the generator has no password and RSVPs use in-memory storage. Development uses Webpack because Turbopack hot reload previously crashed on Windows. Production builds use the default Next.js build.
 
 ## Invitation links and compatibility
 
@@ -99,7 +103,7 @@ GuestInvitation
 
 ## Publish and checks
 
-Import the repository into Vercel as a Next.js project, or build/start it on a Node host. Invitations need no environment variables. RSVPs need the Redis REST variables described above. Create a fresh invitation on the public origin and check its complete link on another device before sharing.
+Import the repository into Vercel as a Next.js project, or build/start it on a Node host. Set `GENERATOR_PASSWORD` and the Redis REST variables described above. Create a fresh invitation on the public origin and check its complete link on another device before sharing.
 
 ```sh
 npm run lint

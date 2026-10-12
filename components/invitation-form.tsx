@@ -46,6 +46,7 @@ export function InvitationForm() {
   const [style, setStyle] = useState<InvitationStyle>("card");
   const [scrollDraft, setScrollDraft] =
     useState<ScrollDraft>(defaultScrollDraft);
+  const [collectRsvp, setCollectRsvp] = useState(true);
   const [errors, setErrors] = useState<InvitationErrors>({});
   const [message, setMessage] = useState("");
   const [pending, setPending] = useState(false);
@@ -93,21 +94,14 @@ export function InvitationForm() {
     try {
       const { validateNormalizedInvitation } =
         await import("@/lib/invitation-model");
-      const rsvp =
-        style === "scroll" && scrollDraft.collect_rsvp
-          ? await import("@/lib/rsvp").then((m) => m.createRsvpKeys())
-          : null;
+      const rsvp = collectRsvp
+        ? await import("@/lib/rsvp").then((m) => m.createRsvpKeys())
+        : null;
+      const shared = { ...values, rsvp_id: rsvp?.id };
       const candidate =
         style === "card"
-          ? { ...values, style }
-          : {
-              ...values,
-              style,
-              scroll: {
-                ...scrollDraftSettings(scrollDraft),
-                rsvp_id: rsvp?.id,
-              },
-            };
+          ? { ...shared, style }
+          : { ...shared, style, scroll: scrollDraftSettings(scrollDraft) };
       const validated = validateNormalizedInvitation(candidate);
       if (!validated.ok) {
         setErrors(validated.errors || {});
@@ -182,10 +176,10 @@ export function InvitationForm() {
               !isPortraitUrl(previewSettings.portrait.url)
                 ? { kind: "default" }
                 : previewSettings.portrait,
-            // The preview shows a disabled RSVP section; the real id is created on submit.
-            rsvp_id: scrollDraft.collect_rsvp ? "preview" : undefined,
           },
         };
+  // The preview shows a disabled RSVP section; the real id is created on submit.
+  if (collectRsvp) previewInvite.rsvp_id = "preview";
 
   return (
     <div className="studio-grid">
@@ -296,6 +290,23 @@ export function InvitationForm() {
                 disabled={!browser || pending}
               />
             )}
+            <div className="form-field rsvp-option">
+              <label className="checkbox-field">
+                <input
+                  type="checkbox"
+                  name="collect_rsvp"
+                  checked={collectRsvp}
+                  disabled={!browser || pending}
+                  onChange={(e) => setCollectRsvp(e.target.checked)}
+                />
+                Let guests accept or decline
+              </label>
+              <p className="field-help">
+                Guests add their name when they reply. You’ll get a private link
+                to see who’s coming. Replies are deleted 20 days after the
+                event.
+              </p>
+            </div>
             {message && (
               <p
                 className={`form-notice ${message.startsWith("Saved!") ? "is-success" : ""}`}

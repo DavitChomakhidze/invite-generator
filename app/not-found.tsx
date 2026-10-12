@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { Header, Footer } from "@/components/brand";
 
 export default function NotFound() {
@@ -12,9 +11,6 @@ export default function NotFound() {
           This link is incomplete or belongs to an older invitation. Ask your
           host for a new invitation link.
         </p>
-        <Link className="button primary" href="/">
-          Back to occasion
-        </Link>
       </main>
       <Footer />
     </>

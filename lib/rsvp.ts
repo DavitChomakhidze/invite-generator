@@ -13,11 +13,13 @@ export const rsvpReplySchema = z.object({
     .min(1, "Please add your name.")
     .max(80, "Keep your name under 80 characters."),
   attending: z.boolean(),
+  // Event start (epoch ms) from the guest's invitation, used only to schedule deletion.
+  event_at: z.number().int().positive().optional(),
 });
 export const rsvpIdSchema = tokenSchema;
 
 export type RsvpReply = z.infer<typeof rsvpReplySchema>;
-export type RsvpResponse = Omit<RsvpReply, "invite_id"> & {
+export type RsvpResponse = Omit<RsvpReply, "invite_id" | "event_at"> & {
   replied_at: number;
 };
 

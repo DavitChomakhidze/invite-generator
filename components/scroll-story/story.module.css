@@ -109,23 +109,28 @@
 .portraitFrame {
   position: relative;
   width: clamp(145px, 45cqw, 225px);
-  margin: 18px 0 0;
+  /* Room for the party hat, which sits above the photo's top edge. */
+  margin: clamp(40px, 13cqw, 70px) 0 0;
 }
 .portrait {
   width: 100%;
   height: auto;
-  aspect-ratio: 3 / 4;
-  object-fit: cover;
+  /* Show the whole photo: no forced aspect ratio or shaped crop. */
+  max-height: 420px;
+  object-fit: contain;
   display: block;
-  border-radius: 47% 44% 39% 43% / 38% 43% 32% 34%;
+  border-radius: 18px;
   filter: grayscale(1);
 }
 .partyHat {
+  --hat-angle: 24deg;
   position: absolute;
   width: 55%;
-  top: -31%;
-  left: 37%;
-  transform: rotate(13deg);
+  top: 0;
+  left: 44%;
+  /* Sit on the photo's top edge whatever its height; `translate` leaves the sway animation's transform free. */
+  translate: 0 -58%;
+  transform: rotate(var(--hat-angle));
   transform-origin: 50% 90%;
   animation: hatHello 4.2s ease-in-out infinite;
 }
@@ -704,13 +709,13 @@
 @keyframes hatHello {
   0%,
   100% {
-    transform: rotate(13deg);
+    transform: rotate(var(--hat-angle));
   }
   35% {
-    transform: rotate(7deg);
+    transform: rotate(calc(var(--hat-angle) - 6deg));
   }
   70% {
-    transform: rotate(16deg);
+    transform: rotate(calc(var(--hat-angle) + 3deg));
   }
 }
 @keyframes scrollNudge {

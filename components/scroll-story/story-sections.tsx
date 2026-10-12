@@ -7,7 +7,7 @@ import {
 } from "@/lib/presentation";
 import { StorySection } from "./story-section";
 import { PartyGlass, RibbonBow } from "./party-art";
-import { StoryRsvp } from "./story-rsvp";
+import { RsvpReply } from "@/components/rsvp-reply";
 import styles from "./story.module.css";
 
 export function StorySections({
@@ -21,7 +21,7 @@ export function StorySections({
 }) {
   const sectionNumber = (index: number) => String(index).padStart(2, "0");
   let nextNumber = invite.dress_code ? 5 : 4;
-  const rsvpNumber = invite.scroll.rsvp_id ? nextNumber++ : 0;
+  const rsvpNumber = invite.rsvp_id ? nextNumber++ : 0;
   const closingNumber = nextNumber;
   const tint = (index: number) => index % 2 === 0;
   return (
@@ -91,7 +91,7 @@ export function StorySections({
           <p className={styles.dressCode}>{invite.dress_code}</p>
         </StorySection>
       )}
-      {invite.scroll.rsvp_id && (
+      {invite.rsvp_id && (
         <StorySection
           label="Reply to the invitation"
           number={sectionNumber(rsvpNumber)}
@@ -102,7 +102,23 @@ export function StorySections({
           <p className={styles.heading}>
             Will you <em>be there?</em>
           </p>
-          <StoryRsvp inviteId={invite.scroll.rsvp_id} preview={preview} />
+          <RsvpReply
+            inviteId={invite.rsvp_id}
+            event={invite}
+            preview={preview}
+            classes={{
+              root: styles.rsvp,
+              choices: styles.rsvpChoices,
+              primary: styles.action,
+              secondary: styles.secondaryAction,
+              quiet: styles.quietAction,
+              note: styles.rsvpNote,
+              label: styles.rsvpLabel,
+              input: styles.rsvpInput,
+              error: styles.rsvpError,
+              done: styles.rsvpDone,
+            }}
+          />
         </StorySection>
       )}
       <StorySection

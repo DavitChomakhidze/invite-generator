@@ -1,6 +1,5 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
-import Link from "next/link";
 import { hostSecretSchema, type RsvpResponse } from "@/lib/rsvp";
 import { savedHostInvites, type SavedHostInvite } from "@/lib/rsvp-local";
 import { formatEventDate } from "@/lib/presentation";
@@ -157,6 +156,9 @@ export function RsvpResponses() {
               <ReplyList title="CAN’T MAKE IT" replies={notGoing} />
             </>
           )}
+          <p className="field-help">
+            Replies are deleted automatically 20 days after the event.
+          </p>
           <button
             type="button"
             className="button secondary"
@@ -167,11 +169,6 @@ export function RsvpResponses() {
           </button>
         </>
       )}
-      <p>
-        <Link href="/" className="text-link">
-          Create an invitation
-        </Link>
-      </p>
     </section>
   );
 }

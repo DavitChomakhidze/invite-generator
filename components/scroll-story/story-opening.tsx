@@ -39,8 +39,8 @@ export function StoryOpening({
       <p className={styles.inviteLabel}>YOU’RE INVITED!</p>
       <motion.div
         className={styles.portraitFrame}
-        initial={reduced ? false : { scale: 0.95, rotate: -5 }}
-        animate={{ scale: 1, rotate: -3 }}
+        initial={reduced ? false : { scale: 0.95 }}
+        animate={{ scale: 1 }}
         transition={storyOpeningTiming}
       >
         <Portrait
