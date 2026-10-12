@@ -3,9 +3,11 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
 import type { InvitationInput } from "@/lib/invitation";
-import { emptyInvitation, sampleInvitation } from "@/lib/presentation";
+import { emptyInvitation, sampleInvitations } from "@/lib/presentation";
 import { SharedEventFields } from "@/components/shared-event-fields";
 import { InvitationStyleSelector } from "@/components/invitation-style-selector";
+import { DesignPicker } from "@/components/design-picker";
+import { DEFAULT_THEME, THEMES, type ThemeId } from "@/lib/themes";
 import { InvitationPreview } from "@/components/invitation-preview";
 import dynamic from "next/dynamic";
 import {
@@ -47,6 +49,8 @@ export function InvitationForm() {
   const [scrollDraft, setScrollDraft] =
     useState<ScrollDraft>(defaultScrollDraft);
   const [collectRsvp, setCollectRsvp] = useState(true);
+  const [theme, setTheme] = useState<ThemeId>(DEFAULT_THEME);
+  const audience = THEMES[theme].audience;
   const [errors, setErrors] = useState<InvitationErrors>({});
   const [message, setMessage] = useState("");
   const [pending, setPending] = useState(false);
@@ -97,7 +101,7 @@ export function InvitationForm() {
       const rsvp = collectRsvp
         ? await import("@/lib/rsvp").then((m) => m.createRsvpKeys())
         : null;
-      const shared = { ...values, rsvp_id: rsvp?.id };
+      const shared = { ...values, rsvp_id: rsvp?.id, theme };
       const candidate =
         style === "card"
           ? { ...shared, style }
@@ -146,7 +150,7 @@ export function InvitationForm() {
   const preview = Object.fromEntries(
     Object.entries(values).map(([key, value]) => [
       key,
-      value || sampleInvitation[key as keyof InvitationInput],
+      value || sampleInvitations[audience][key as keyof InvitationInput],
     ]),
   ) as InvitationInput;
   // Optional text should disappear when deliberately left blank; sample copy only accompanies an untouched form.
@@ -180,6 +184,7 @@ export function InvitationForm() {
         };
   // The preview shows a disabled RSVP section; the real id is created on submit.
   if (collectRsvp) previewInvite.rsvp_id = "preview";
+  previewInvite.theme = theme;
 
   return (
     <div className="studio-grid">
@@ -271,12 +276,18 @@ export function InvitationForm() {
                 setMessage("");
               }}
             />
+            <DesignPicker
+              theme={theme}
+              onChange={setTheme}
+              disabled={!browser || pending}
+            />
             <SharedEventFields
               values={values}
               errors={errors}
               onChange={change}
               zones={zones}
               disabled={!browser || pending}
+              audience={audience}
             />
             {style === "scroll" && (
               <ScrollSettingsFields

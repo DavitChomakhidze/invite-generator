@@ -1,6 +1,9 @@
 "use client";
 import { useEffect, useRef, useState, type RefObject } from "react";
-import type { ScrollInvitationData } from "@/lib/invitation-model";
+import {
+  invitationTheme,
+  type ScrollInvitationData,
+} from "@/lib/invitation-model";
 import { StoryOpening } from "@/components/scroll-story/story-opening";
 import { StorySections } from "@/components/scroll-story/story-sections";
 import styles from "@/components/scroll-story/story.module.css";
@@ -9,7 +12,6 @@ import { useAudioSegment } from "@/lib/use-audio-segment";
 import { MusicControls } from "@/components/music-controls";
 import type { MusicSegment } from "@/lib/invitation-model";
 import { useStoryMotion } from "@/lib/use-story-motion";
-import { DEFAULT_STORY_THEME } from "@/lib/story-themes";
 
 export function ScrollInvitation({
   invite,
@@ -89,7 +91,7 @@ function Story({
       ref={story}
       // Decorations autoplay by design; section reveals still handle reduced motion.
       className={`${styles.story} ${preview ? styles.preview : ""} motion-requested`}
-      data-theme={invite.scroll.theme ?? DEFAULT_STORY_THEME}
+      data-theme={invitationTheme(invite)}
       aria-label="Scroll Story"
     >
       <div className={styles.motionToolbar}>

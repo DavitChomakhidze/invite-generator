@@ -42,16 +42,19 @@
 .rsvp-privacy { font-size: 11px; opacity: 0.85; text-align: center; }
 .rsvp-privacy a { text-decoration: underline; text-underline-offset: 3px; }
 .site-footer a { text-decoration: underline; text-underline-offset: 3px; }
-.card-rsvp-section { margin-top: 26px; padding-top: 22px; border-top: 1px dashed #e4cdd5; }
-.card-rsvp-title { font-family: var(--serif); font-size: 22px; font-weight: 500; color: var(--plum); }
+.card-rsvp-section { margin-top: 26px; padding-top: 22px; border-top: 1px dashed var(--card-border); }
+.card-rsvp-title { font-family: var(--serif); font-size: 22px; font-weight: 500; color: var(--card-name); }
 .card-rsvp { display: flex; flex-direction: column; align-items: center; gap: 8px; max-width: 300px; margin: 12px auto 0; }
 .card-rsvp-choices { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
-.card-rsvp-note { font-size: 13px; color: var(--muted); }
-.card-rsvp-label { align-self: flex-start; font-size: 10px; font-weight: 500; color: #6c5763; }
-.card-rsvp-input { width: 100%; min-height: 44px; padding: 10px 12px; border: 1px solid #e6dedf; border-radius: 7px; background: #fffefd; color: var(--plum); font-size: 16px; }
+.card-rsvp-note { font-size: 13px; color: var(--card-muted); }
+.card-rsvp-label { align-self: flex-start; font-size: 10px; font-weight: 500; color: var(--card-muted); }
+.card-rsvp-input { width: 100%; min-height: 44px; padding: 10px 12px; border: 1px solid var(--card-button-border); border-radius: 7px; background: var(--card-button-bg); color: var(--card-ink); font-size: 16px; }
 .card-rsvp-input[aria-invalid="true"] { border-color: #c27a8f; }
 .card-rsvp .field-error { align-self: flex-start; }
-.card-rsvp-done { font-family: var(--serif); font-size: 17px; color: var(--rose-dark); }
+.card-rsvp-done { font-family: var(--serif); font-size: 17px; color: var(--card-name); }
+.card-rsvp .button.primary { background: var(--card-cta); color: var(--card-on-cta); }
+.card-rsvp .button.secondary { background: var(--card-button-bg); color: var(--card-accent); border-color: var(--card-button-border); }
+.card-rsvp .text-link { color: var(--card-accent); }
 .card-rsvp-done:focus { outline: none; }
 .rsvp-option { margin-top: 18px; }
 .responses-page { max-width: 560px; margin: 20px auto 60px; padding: 0 24px; }
@@ -700,11 +703,145 @@ legend .optional-tag {
   font-size: 16px;
   color: #bd9a76;
 }
+/* Animated Card designs. Pink Party is the default; names mirror lib/themes.ts. */
+.invitation-experience {
+  --card-paper: #fffaf5;
+  --card-ink: var(--plum);
+  --card-border: #e8d8cd;
+  --card-inner: #eaddcf;
+  --card-eyebrow: #85654e;
+  --card-gold: #d4bda1;
+  --card-name: #86516a;
+  --card-title: #97745f;
+  --card-text: #7d6870;
+  --card-muted: #80616e;
+  --card-accent: #8f5c70;
+  --card-button-border: #dec8cf;
+  --card-button-bg: #fff9f6;
+  --card-button-hover: #f6e8eb;
+  --card-cta: var(--rose);
+  --card-on-cta: #fff;
+  --card-halo: #f8edf0;
+  --card-dots: #d298ad;
+  --card-seal: #c98598;
+  --env-back: #dab0b5;
+  --env-front-a: #f6ded5;
+  --env-front-b: #e4b9b5;
+  --env-inner: #efd0c5;
+  --env-flap: #f7e0d7;
+  --env-seal: #a35f77;
+  --env-seal-ring: #b87c8d;
+  --env-seal-ink: #fff5ee;
+  --letter-paper: #fffaf3;
+  --letter-border: #dfc9b4;
+  --letter-ink: #86516a;
+  --letter-sub: #886850;
+  --letter-label: #80616e;
+}
+.invitation-experience[data-theme="lavender"] {
+  --card-paper: #fcfaff;
+  --card-ink: #3f2d6b;
+  --card-border: #e1d8f2;
+  --card-inner: #e9e2f6;
+  --card-eyebrow: #6a5a8c;
+  --card-gold: #c9b9e8;
+  --card-name: #5b3fa6;
+  --card-title: #7a64a8;
+  --card-text: #5f5675;
+  --card-muted: #6a5d84;
+  --card-accent: #5b3fa6;
+  --card-button-border: #d8ccf0;
+  --card-button-bg: #f8f4ff;
+  --card-button-hover: #efe8fb;
+  --card-cta: #6a4bb3;
+  --card-halo: #efe9fb;
+  --card-dots: #b79cf0;
+  --card-seal: #8a72c4;
+  --env-back: #c9b8ea;
+  --env-front-a: #efe7fb;
+  --env-front-b: #d6c6f0;
+  --env-inner: #e6dcf7;
+  --env-flap: #f3edfc;
+  --env-seal: #6a4bb3;
+  --env-seal-ring: #8a72c4;
+  --letter-paper: #fdfbff;
+  --letter-border: #ddd2f0;
+  --letter-ink: #5b3fa6;
+  --letter-sub: #7a64a8;
+  --letter-label: #6a5d84;
+}
+.invitation-experience[data-theme="midnight"] {
+  --card-paper: #1c2440;
+  --card-ink: #f1e8d0;
+  --card-border: #3a4670;
+  --card-inner: #c9a24b55;
+  --card-eyebrow: #e6c46e;
+  --card-gold: #c9a24b;
+  --card-name: #e6c46e;
+  --card-title: #ddd0ac;
+  --card-text: #e9e1cc;
+  --card-muted: #c9bfa4;
+  --card-accent: #e6c46e;
+  --card-button-border: #c9a24b88;
+  --card-button-bg: #24304f;
+  --card-button-hover: #2c3a60;
+  --card-cta: #d4ad55;
+  --card-on-cta: #1c2440;
+  --card-halo: #2f3b63;
+  --card-dots: #d4ad55;
+  --card-seal: #d4ad55;
+  --env-back: #2b3762;
+  --env-front-a: #3a4884;
+  --env-front-b: #26315a;
+  --env-inner: #2f3c6c;
+  --env-flap: #44539a;
+  --env-seal: #d4ad55;
+  --env-seal-ring: #f7e6b0;
+  --env-seal-ink: #1c2440;
+  --letter-paper: #f8f1de;
+  --letter-border: #d4ad55;
+  --letter-ink: #1c2440;
+  --letter-sub: #7a6630;
+  --letter-label: #5a5240;
+}
+.invitation-experience[data-theme="ocean"] {
+  --card-paper: #f7fbff;
+  --card-ink: #1f3a5f;
+  --card-border: #d3e3f3;
+  --card-inner: #dfeaf6;
+  --card-eyebrow: #4a6f99;
+  --card-gold: #9cc2ea;
+  --card-name: #225592;
+  --card-title: #4a6f99;
+  --card-text: #4a5c72;
+  --card-muted: #50667f;
+  --card-accent: #225592;
+  --card-button-border: #c4d9ef;
+  --card-button-bg: #eef6ff;
+  --card-button-hover: #e1eefb;
+  --card-cta: #2c69b0;
+  --card-halo: #e3effb;
+  --card-dots: #7fb5ec;
+  --card-seal: #2c69b0;
+  --env-back: #9cc2ea;
+  --env-front-a: #e3f0fc;
+  --env-front-b: #b9d6f2;
+  --env-inner: #d3e6f8;
+  --env-flap: #eaf4fd;
+  --env-seal: #2c69b0;
+  --env-seal-ring: #6d9fd6;
+  --letter-paper: #fbfdff;
+  --letter-border: #cfe0f1;
+  --letter-ink: #225592;
+  --letter-sub: #4a6f99;
+  --letter-label: #50667f;
+}
 .invitation-frame {
   position: relative;
   text-align: center;
-  background: #fffaf5;
-  border: 1px solid #e8d8cd;
+  background: var(--card-paper);
+  color: var(--card-ink);
+  border: 1px solid var(--card-border);
   border-radius: 110px 110px 5px 5px;
   padding: 33px 25px 25px;
   box-shadow: 0 8px 23px #6753660b;
@@ -714,7 +851,7 @@ legend .optional-tag {
   content: "";
   position: absolute;
   inset: 9px;
-  border: 1px solid #eaddcf;
+  border: 1px solid var(--card-inner);
   border-radius: 103px 103px 2px 2px;
   pointer-events: none;
 }
@@ -725,13 +862,13 @@ legend .optional-tag {
   gap: 9px;
   font-size: 7px;
   letter-spacing: 2.5px;
-  color: #9b7c67;
+  color: var(--card-eyebrow);
   margin: 3px 0 0;
 }
 .invite-eyebrow > span {
   width: 18px;
   height: 1px;
-  background: #ccb497;
+  background: var(--card-gold);
 }
 .character-scene {
   position: relative;
@@ -774,7 +911,7 @@ legend .optional-tag {
 .invite-pretitle {
   font-family: var(--serif);
   font-size: 15px;
-  color: #9b7d83;
+  color: var(--card-muted);
   font-style: normal;
 }
 .invite-name {
@@ -782,7 +919,7 @@ legend .optional-tag {
   font-size: 49px;
   line-height: 1.05;
   letter-spacing: -1.7px;
-  color: #86516a;
+  color: var(--card-name);
   font-weight: 500;
   margin-top: 2px;
 }
@@ -793,7 +930,7 @@ legend .optional-tag {
 .invite-title {
   font-family: var(--serif);
   font-size: 24px;
-  color: #97745f;
+  color: var(--card-title);
   font-style: normal;
   line-height: 1.3;
   margin-top: 4px;
@@ -817,7 +954,7 @@ legend .optional-tag {
   line-height: 1.5;
   max-width: 270px;
   margin: 0 auto 18px;
-  color: #7d6870;
+  color: var(--card-text);
   white-space: pre-line;
 }
 .event-details {
@@ -837,19 +974,19 @@ legend .optional-tag {
   line-height: 1.6;
 }
 .event-details svg {
-  color: #a88289;
+  color: var(--card-muted);
   width: 14px;
   margin-top: 1px;
 }
 .timezone-label {
   font-size: 8px;
-  color: #8e7983;
+  color: var(--card-muted);
 }
 .dress-code {
   margin: 19px 0 0;
   font-family: var(--serif);
   font-size: 16px;
-  color: #8a6c78;
+  color: var(--card-text);
 }
 .dress-code > span {
   display: block;
@@ -857,7 +994,7 @@ legend .optional-tag {
   font-size: 7px;
   letter-spacing: 1.7px;
   margin-bottom: 5px;
-  color: #aa8890;
+  color: var(--card-muted);
 }
 .map-button {
   margin: 19px auto 0;
@@ -866,16 +1003,16 @@ legend .optional-tag {
   justify-content: center;
   gap: 8px;
   font-size: 9px;
-  border: 1px solid #dec8cf;
+  border: 1px solid var(--card-button-border);
   border-radius: 5px;
   min-height: 39px;
   padding: 8px 13px;
-  color: #8f5c70;
-  background: #fff9f6;
+  color: var(--card-accent);
+  background: var(--card-button-bg);
   transition: background 0.2s;
 }
 .map-button:hover {
-  background: #f6e8eb;
+  background: var(--card-button-hover);
 }
 .map-placeholder {
   display: flex;
@@ -883,14 +1020,14 @@ legend .optional-tag {
   justify-content: center;
   gap: 5px;
   font-size: 10px;
-  color: #97818a;
+  color: var(--card-muted);
   margin-top: 20px;
 }
 .invite-signoff {
   font-family: var(--serif);
   font-style: normal;
   font-size: 13px;
-  color: #a0848d;
+  color: var(--card-muted);
   margin-top: 22px;
 }
 .invite-signoff > span {
@@ -898,14 +1035,14 @@ legend .optional-tag {
   font-family: var(--sans);
   font-style: normal;
   font-size: 18px;
-  color: #bb8a9b;
+  color: var(--card-name);
   margin-top: 8px;
 }
 .paper-corner {
   position: absolute;
   width: 17px;
   height: 17px;
-  border-color: #dcc5ac;
+  border-color: var(--card-gold);
   border-style: solid;
   opacity: 0.7;
 }
@@ -1785,7 +1922,7 @@ legend > span:first-child {
 .timezone-label,
 .dress-code > span,
 .invite-signoff {
-  color: #80616e;
+  color: var(--card-muted);
 }
 .how-grid article > span {
   color: #986478;
@@ -1794,13 +1931,13 @@ legend > span:first-child {
   color: #795b73;
 }
 .invite-eyebrow {
-  color: #85654e;
+  color: var(--card-eyebrow);
 }
 .guest-header > span {
   color: #806473;
 }
 .map-placeholder {
-  color: #80616e;
+  color: var(--card-muted);
 }
 .form-field input::placeholder,
 .form-field textarea::placeholder {
@@ -1988,7 +2125,7 @@ legend > span:first-child {
   font-family: var(--serif);
   font-size: 14px;
   font-style: normal;
-  color: #80616e;
+  color: var(--card-muted);
 }
 .delivery-envelope {
   position: absolute;
@@ -2004,7 +2141,7 @@ legend > span:first-child {
 .envelope-back {
   position: absolute;
   inset: 0;
-  background: #dab0b5;
+  background: var(--env-back);
   border-radius: 4px;
   box-shadow: 0 18px 36px #5f354c30;
 }
@@ -2012,7 +2149,7 @@ legend > span:first-child {
   position: absolute;
   inset: 0;
   z-index: 4;
-  background: linear-gradient(145deg, #f6ded5, #e4b9b5);
+  background: linear-gradient(145deg, var(--env-front-a), var(--env-front-b));
   clip-path: polygon(0 0, 50% 52%, 100% 0, 100% 100%, 0 100%);
   border-radius: 4px;
 }
@@ -2020,13 +2157,13 @@ legend > span:first-child {
   content: "";
   position: absolute;
   inset: 0;
-  background: #efd0c5;
+  background: var(--env-inner);
   clip-path: polygon(0 100%, 50% 47%, 100% 100%);
 }
 .envelope-flap {
   position: absolute;
   inset: 0;
-  background: #f7e0d7;
+  background: var(--env-flap);
   clip-path: polygon(0 0, 100% 0, 50% 53%);
   transform-origin: center top;
   z-index: 5;
@@ -2043,9 +2180,9 @@ legend > span:first-child {
   border-radius: 50%;
   display: grid;
   place-items: center;
-  background: #a35f77;
-  color: #fff5ee;
-  box-shadow: inset 0 0 0 2px #b87c8d;
+  background: var(--env-seal);
+  color: var(--env-seal-ink);
+  box-shadow: inset 0 0 0 2px var(--env-seal-ring);
   font-family: var(--serif);
   font-size: 17px;
   z-index: 6;
@@ -2057,8 +2194,8 @@ legend > span:first-child {
   right: 10px;
   top: 7px;
   min-height: 120px;
-  background: #fffaf3;
-  border: 1px solid #dfc9b4;
+  background: var(--letter-paper);
+  border: 1px solid var(--letter-border);
   padding: 18px 8px 12px;
   z-index: 2;
   text-align: center;
@@ -2070,7 +2207,7 @@ legend > span:first-child {
   font-size: 8px;
   text-transform: uppercase;
   letter-spacing: 2px;
-  color: #80616e;
+  color: var(--letter-label);
 }
 .envelope-letter strong {
   display: block;
@@ -2079,13 +2216,13 @@ legend > span:first-child {
   font-weight: 500;
   line-height: 1.1;
   margin: 9px 0 5px;
-  color: #86516a;
+  color: var(--letter-ink);
 }
 .envelope-letter i {
   font-family: var(--serif);
   font-style: normal;
   font-size: 17px;
-  color: #886850;
+  color: var(--letter-sub);
 }
 .is-opening .delivery-host {
   animation: host-arrival 6.1s ease-in-out both;
@@ -2104,7 +2241,7 @@ legend > span:first-child {
 .invitation-rule {
   width: 58px;
   height: 1px;
-  background: #d4bda1;
+  background: var(--card-gold);
   margin: 20px auto;
 }
 .guest-main .delivery-scene {

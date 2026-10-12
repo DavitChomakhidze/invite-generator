@@ -7,7 +7,7 @@ import {
 import { findMusicTrack } from "@/lib/music-catalog";
 import { isPortraitUrl } from "@/lib/portrait";
 import { rsvpIdSchema } from "@/lib/rsvp";
-import { STORY_THEME_IDS } from "@/lib/story-themes";
+import { DEFAULT_THEME, THEME_IDS, THEMES, type ThemeId } from "@/lib/themes";
 
 export const portraitSchema = z.discriminatedUnion("kind", [
   z.object({ kind: z.literal("default") }),
@@ -66,19 +66,23 @@ export const scrollSettingsSchema = z.object({
     .max(300, "Keep the closing message under 300 characters.")
     .default(""),
   music: musicSegmentSchema.nullable().default(null),
-  // Optional so older links stay unchanged; renderers treat a missing theme as Pink Party.
-  theme: z.enum(STORY_THEME_IDS).optional(),
+  // Legacy: briefly written here before designs applied to both styles. See invitationTheme().
+  theme: z.enum(THEME_IDS).optional(),
 });
 
-// Present only when the host chose to collect replies; links without it show no RSVP section.
-const rsvpFields = { rsvp_id: rsvpIdSchema.optional() };
+const sharedFields = {
+  // Present only when the host chose to collect replies; links without it show no RSVP section.
+  rsvp_id: rsvpIdSchema.optional(),
+  // Optional so older links stay unchanged; a missing design renders as Pink Party.
+  theme: z.enum(THEME_IDS).optional(),
+};
 
 export const normalizedInvitationSchema = z.discriminatedUnion("style", [
-  invitationSchema.extend({ style: z.literal("card"), ...rsvpFields }),
+  invitationSchema.extend({ style: z.literal("card"), ...sharedFields }),
   invitationSchema.extend({
     style: z.literal("scroll"),
     scroll: scrollSettingsSchema,
-    ...rsvpFields,
+    ...sharedFields,
   }),
 ]);
 
@@ -123,4 +127,16 @@ export function validateNormalizedInvitation(
   if (!event.ok)
     return { ok: false, message: event.message, errors: event.errors || {} };
   return { ok: true, data: parsed.data };
+}
+
+export function invitationTheme(invite: NormalizedInvitation): ThemeId {
+  return (
+    invite.theme ??
+    (invite.style === "scroll" ? invite.scroll.theme : undefined) ??
+    DEFAULT_THEME
+  );
+}
+
+export function invitationAudience(invite: NormalizedInvitation) {
+  return THEMES[invitationTheme(invite)].audience;
 }

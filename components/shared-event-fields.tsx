@@ -1,6 +1,8 @@
 "use client";
 import type { InvitationInput } from "@/lib/invitation";
 import type { InvitationErrors } from "@/lib/invitation-model";
+import { fieldHints } from "@/lib/presentation";
+import type { Audience } from "@/lib/themes";
 
 export function SharedEventFields({
   values,
@@ -8,13 +10,16 @@ export function SharedEventFields({
   onChange: change,
   zones,
   disabled,
+  audience,
 }: {
   values: InvitationInput;
   errors: InvitationErrors;
   onChange: (key: keyof InvitationInput, value: string) => void;
   zones: string[];
   disabled: boolean;
+  audience: Audience;
 }) {
+  const hints = fieldHints[audience];
   function field(key: keyof InvitationInput) {
     return {
       id: key,
@@ -48,7 +53,7 @@ export function SharedEventFields({
           </label>
           <input
             {...field("host_name")}
-            placeholder="e.g. Isabella"
+            placeholder={hints.host_name}
             maxLength={80}
             autoComplete="given-name"
             required
@@ -96,7 +101,7 @@ export function SharedEventFields({
           <div className="address-input">
             <input
               {...field("address")}
-              placeholder="e.g. The Rose Garden, 24 Bloom Street"
+              placeholder={hints.address}
               maxLength={300}
               required
             />
@@ -129,7 +134,7 @@ export function SharedEventFields({
           <label htmlFor="message">A little note to your guests </label>
           <textarea
             {...field("message")}
-            placeholder="A little sparkle, a lot of love, and my favorite people…"
+            placeholder={hints.message}
             rows={3}
             maxLength={600}
           />
@@ -152,7 +157,7 @@ export function SharedEventFields({
             <label htmlFor="dress_code">Dress code</label>
             <input
               {...field("dress_code")}
-              placeholder="e.g. A touch of pink"
+              placeholder={hints.dress_code}
               maxLength={100}
             />
             {error("dress_code")}

@@ -7,6 +7,14 @@
       "license": "CC0-1.0",
       "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
       "note": "Fictional illustrated person. Not a photo of the invitation host."
+    },
+    {
+      "file": "/images/demo-portrait-boy.svg",
+      "title": "Illustrated demo portrait (boy)",
+      "source": "Original vector artwork created for this repository; no third-party image or reference used.",
+      "license": "CC0-1.0",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "note": "Fictional illustrated person. Not a photo of the invitation host."
     }
   ],
   "decorations": [

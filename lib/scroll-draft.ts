@@ -1,12 +1,10 @@
 import type { ScrollSettings } from "@/lib/invitation-model";
-import { DEFAULT_STORY_THEME, type StoryTheme } from "@/lib/story-themes";
 
 export type ScrollDraft = {
   age: string;
   portrait_url: string;
   closing_message: string;
   music: ScrollSettings["music"];
-  theme: StoryTheme;
 };
 export function defaultScrollDraft(): ScrollDraft {
   return {
@@ -14,7 +12,6 @@ export function defaultScrollDraft(): ScrollDraft {
     portrait_url: "",
     closing_message: "",
     music: null,
-    theme: DEFAULT_STORY_THEME,
   };
 }
 export function scrollDraftSettings(draft: ScrollDraft): ScrollSettings {
@@ -25,6 +22,5 @@ export function scrollDraftSettings(draft: ScrollDraft): ScrollSettings {
       : { kind: "default" },
     closing_message: draft.closing_message,
     music: draft.music,
-    theme: draft.theme,
   };
 }

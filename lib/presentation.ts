@@ -1,4 +1,5 @@
 import type { InvitationInput } from "@/lib/invitation";
+import type { Audience } from "@/lib/themes";
 
 export function isGoogleMapsUrl(value: string): boolean {
   try {
@@ -39,6 +40,38 @@ export const sampleInvitation: InvitationInput = {
     "A little sparkle, a lot of love, and my favorite people. Come make a wish with me!",
   event_title: "",
   dress_code: "A touch of pink",
+};
+
+/** Preview content shown until the creator fills a field, matched to the chosen design. */
+export const sampleInvitations: Record<Audience, InvitationInput> = {
+  her: sampleInvitation,
+  him: {
+    ...sampleInvitation,
+    host_name: "Alexander",
+    address: "The Oak Terrace · 12 Harbor Street",
+    message:
+      "Good friends, great music and plenty of cake. Come celebrate with me!",
+    dress_code: "Smart casual",
+  },
+};
+
+/** Example text inside empty form fields. */
+export const fieldHints: Record<
+  Audience,
+  Record<"host_name" | "address" | "message" | "dress_code", string>
+> = {
+  her: {
+    host_name: "e.g. Isabella",
+    address: "e.g. The Rose Garden, 24 Bloom Street",
+    message: "A little sparkle, a lot of love, and my favorite people…",
+    dress_code: "e.g. A touch of pink",
+  },
+  him: {
+    host_name: "e.g. Alexander",
+    address: "e.g. The Oak Terrace, 12 Harbor Street",
+    message: "Good friends, great music and plenty of cake…",
+    dress_code: "e.g. Smart casual",
+  },
 };
 
 export function formatEventDate(value: string) {

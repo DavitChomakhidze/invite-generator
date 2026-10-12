@@ -1,7 +1,10 @@
 "use client";
 import { motion } from "motion/react";
 import { useStoryReducedMotion } from "@/lib/use-story-motion";
-import type { ScrollInvitationData } from "@/lib/invitation-model";
+import {
+  invitationAudience,
+  type ScrollInvitationData,
+} from "@/lib/invitation-model";
 import { storyOpeningTiming, storyTitleTiming } from "@/lib/story-animation";
 import { Portrait } from "@/components/portrait";
 import { CutoutText } from "./cutout-text";
@@ -66,6 +69,7 @@ export function StoryOpening({
         <Portrait
           portrait={invite.scroll.portrait}
           name={invite.host_name}
+          audience={invitationAudience(invite)}
           className={styles.portrait}
         />
         <PartyHat className={`${styles.partyHat} ${styles.ambient}`} />

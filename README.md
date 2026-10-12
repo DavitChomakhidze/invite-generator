@@ -75,14 +75,27 @@ No remote audio inputs, uploaded MP3s, waveform editor, physical trimming, autop
 
 Automated audio tests synthesize an original WAV tone in memory and serve it from a temporary test-only HTTP server. It is not part of the production catalog or application routes.
 
-## Story designs
+## Designs (both styles)
 
-Scroll Story has four designs, chosen with a **For her / For him** switch in the generator:
+Both invitation styles share four designs, chosen with a **For her / For him** switch under the style choice:
 
 - For her: **Pink Party** (default) and **Lavender Dream**.
-- For him: **Midnight Gold** and **Blue Party**. These swap the bow and lips for balloons, and the dress-code ribbon for a bow tie.
+- For him: **Midnight Gold** and **Blue Party**.
 
-The design is stored as `scroll.theme`; links without it render Pink Party. Colors are CSS custom properties in `components/scroll-story/story.module.css`, and the artwork in `party-art.tsx` reads them. To add a design, add a token block there and an entry in `lib/story-themes.ts`.
+"For him" designs change more than colors:
+
+- Animated Card: an illustrated birthday boy delivers the envelope instead of the girl.
+- Scroll Story: balloons replace the bow and lips, a bow tie replaces the dress-code ribbon, and the placeholder portrait is a boy.
+
+The design is stored as the top-level `theme`. Links without it render Pink Party. Story links made briefly with `scroll.theme` still work (see `invitationTheme()`).
+
+Where the colors live:
+
+- Scroll Story: CSS custom properties in `components/scroll-story/story.module.css`.
+- Animated Card: the `--card-*` / `--env-*` tokens on `.invitation-experience` in `app/globals.css`.
+- Both characters share their walk-in and envelope animation through `components/birthday-character.tsx`.
+
+To add a design, add token blocks for both styles and an entry in `lib/themes.ts`.
 
 ## Privacy
 

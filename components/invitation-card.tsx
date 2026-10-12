@@ -2,12 +2,17 @@
 import { useEffect, useRef, useState } from "react";
 import { useReducedMotion } from "motion/react";
 import { BirthdayGirl } from "@/components/birthday-girl";
+import { BirthdayBoy } from "@/components/birthday-boy";
 import {
   formatEventDate,
   formatEventTime,
   isGoogleMapsUrl,
 } from "@/lib/presentation";
-import type { CardInvitationData } from "@/lib/invitation-model";
+import {
+  invitationAudience,
+  invitationTheme,
+  type CardInvitationData,
+} from "@/lib/invitation-model";
 import { useBrowser } from "@/lib/use-browser";
 import { RsvpReply, type RsvpClasses } from "@/components/rsvp-reply";
 
@@ -71,9 +76,12 @@ export function InvitationCard({
     };
   }, [motionAllowed, sequence]);
   const animate = playing && motionAllowed;
+  const Host =
+    invitationAudience(invite) === "him" ? BirthdayBoy : BirthdayGirl;
   return (
     <div
       className={`invitation-experience ${preview ? "is-preview" : ""} ${animate ? "is-opening" : ""} ${sequence > 0 ? "motion-requested" : ""}`}
+      data-theme={invitationTheme(invite)}
     >
       <div className="animation-toolbar">
         <span>
@@ -111,7 +119,7 @@ export function InvitationCard({
           data-animating={animate}
         >
           <div className="delivery-host">
-            <BirthdayGirl animate={animate} />
+            <Host animate={animate} />
           </div>
           {animate && (
             <div className="delivery-envelope" aria-hidden="true">

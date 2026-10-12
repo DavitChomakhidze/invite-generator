@@ -2,15 +2,18 @@
 import Image from "next/image";
 import { useState } from "react";
 import type { ScrollSettings } from "@/lib/invitation-model";
-import { DEMO_PORTRAIT, isPortraitUrl } from "@/lib/portrait";
+import { DEMO_PORTRAITS, isPortraitUrl } from "@/lib/portrait";
+import type { Audience } from "@/lib/themes";
 
 export function Portrait({
   portrait,
   name,
+  audience,
   className,
 }: {
   portrait: ScrollSettings["portrait"];
   name: string;
+  audience: Audience;
   className?: string;
 }) {
   const [failedUrl, setFailedUrl] = useState<string | null>(null);
@@ -19,7 +22,9 @@ export function Portrait({
     isPortraitUrl(portrait.url) &&
     portrait.url !== failedUrl;
   const src =
-    remote && portrait.kind === "remote" ? portrait.url : DEMO_PORTRAIT;
+    remote && portrait.kind === "remote"
+      ? portrait.url
+      : DEMO_PORTRAITS[audience];
   return (
     <Image
       src={src}
