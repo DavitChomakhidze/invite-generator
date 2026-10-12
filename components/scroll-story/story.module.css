@@ -120,7 +120,6 @@
   object-fit: contain;
   display: block;
   border-radius: 18px;
-  filter: grayscale(1);
 }
 .partyHat {
   --hat-angle: 24deg;
