@@ -5,7 +5,15 @@ import type { ScrollInvitationData } from "@/lib/invitation-model";
 import { storyOpeningTiming, storyTitleTiming } from "@/lib/story-animation";
 import { Portrait } from "@/components/portrait";
 import { CutoutText } from "./cutout-text";
-import { DiscoBall, Kiss, PartyGlass, PartyHat, RibbonBow } from "./party-art";
+import {
+  Balloon,
+  Balloons,
+  DiscoBall,
+  Kiss,
+  PartyGlass,
+  PartyHat,
+  RibbonBow,
+} from "./party-art";
 import styles from "./story.module.css";
 import { StorySparkles } from "./story-sparkles";
 
@@ -29,10 +37,22 @@ export function StoryOpening({
     >
       <div className={styles.heroDecor} aria-hidden="true">
         <StorySparkles opening />
-        <RibbonBow className={`${styles.bow} ${styles.ambient}`} />
+        <RibbonBow
+          className={`${styles.bow} ${styles.ambient} ${styles.forHer}`}
+        />
+        <Balloons
+          className={`${styles.balloons} ${styles.ambient} ${styles.forHim}`}
+        />
+        <Balloon
+          className={`${styles.balloonSmall} ${styles.ambient} ${styles.forHim}`}
+        />
         <DiscoBall className={`${styles.disco} ${styles.ambient}`} />
-        <Kiss className={`${styles.kissLeft} ${styles.ambient}`} />
-        <Kiss className={`${styles.kissRight} ${styles.ambient}`} />
+        <Kiss
+          className={`${styles.kissLeft} ${styles.ambient} ${styles.forHer}`}
+        />
+        <Kiss
+          className={`${styles.kissRight} ${styles.ambient} ${styles.forHer}`}
+        />
         <PartyGlass className={`${styles.glassLeft} ${styles.ambient}`} />
         <PartyGlass className={`${styles.glassRight} ${styles.ambient}`} />
       </div>

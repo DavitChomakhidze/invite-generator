@@ -174,6 +174,12 @@ export function RsvpReply({
           {error}
         </p>
       )}
+      <p className={`${styles.note} rsvp-privacy`}>
+        Only the host sees your reply. It’s deleted 20 days after the event.{" "}
+        <a href="/privacy" target="_blank" rel="noopener">
+          Privacy
+        </a>
+      </p>
       <div className={styles.choices}>
         <button type="submit" className={styles.primary} disabled={pending}>
           {pending ? "Sending…" : attending ? "Send my yes" : "Send my regrets"}

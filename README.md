@@ -75,6 +75,19 @@ No remote audio inputs, uploaded MP3s, waveform editor, physical trimming, autop
 
 Automated audio tests synthesize an original WAV tone in memory and serve it from a temporary test-only HTTP server. It is not part of the production catalog or application routes.
 
+## Story designs
+
+Scroll Story has four designs, chosen with a **For her / For him** switch in the generator:
+
+- For her: **Pink Party** (default) and **Lavender Dream**.
+- For him: **Midnight Gold** and **Blue Party**. These swap the bow and lips for balloons, and the dress-code ribbon for a bow tie.
+
+The design is stored as `scroll.theme`; links without it render Pink Party. Colors are CSS custom properties in `components/scroll-story/story.module.css`, and the artwork in `party-art.tsx` reads them. To add a design, add a token block there and an entry in `lib/story-themes.ts`.
+
+## Privacy
+
+`/privacy` explains in plain language what is stored. It is linked from the reply form, the responses page and the site footer. Keep it in step with `lib/rsvp-store.ts` and `lib/rsvp-local.ts`.
+
 ## Animation and accessibility
 
 Scroll Story uses a pink scrapbook party design inspired by the supplied video reference: star-patterned paper, original vector disco/bow/party decorations, a full-color portrait with a party hat, patterned age numbers, cutout name lettering, and compact scrolling event sections. The portrait is cropped in the browser; remote photos are not automatically background-removed. Names retain their accessible text and Unicode grapheme clusters. The existing message, date/time, location/Maps, optional dress code and closing fields drive the content; the reference's separate itinerary is not part of the current data model. No video footage, third-party character artwork, or soundtrack is bundled.

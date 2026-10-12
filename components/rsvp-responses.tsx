@@ -157,7 +157,10 @@ export function RsvpResponses() {
             </>
           )}
           <p className="field-help">
-            Replies are deleted automatically 20 days after the event.
+            Replies are deleted automatically 20 days after the event.{" "}
+            <a className="text-link" href="/privacy" target="_blank">
+              Privacy
+            </a>
           </p>
           <button
             type="button"

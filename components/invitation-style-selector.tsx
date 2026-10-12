@@ -19,7 +19,7 @@ export function InvitationStyleSelector({
             [
               "scroll",
               "Scroll Story",
-              "Pink scrapbook party · scroll to celebrate",
+              "Scrapbook party with your photo · 4 designs",
             ],
           ] as const
         ).map(([id, title, description]) => (

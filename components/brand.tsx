@@ -37,7 +37,9 @@ export function Footer() {
         occasion.{" "}
         <span className="footer-muted">An invitation to remember.</span>
       </span>
-      <span>For your favorite people.</span>
+      <span>
+        For your favorite people. <Link href="/privacy">Privacy</Link>
+      </span>
     </footer>
   );
 }

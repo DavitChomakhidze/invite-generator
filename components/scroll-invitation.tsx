@@ -9,6 +9,7 @@ import { useAudioSegment } from "@/lib/use-audio-segment";
 import { MusicControls } from "@/components/music-controls";
 import type { MusicSegment } from "@/lib/invitation-model";
 import { useStoryMotion } from "@/lib/use-story-motion";
+import { DEFAULT_STORY_THEME } from "@/lib/story-themes";
 
 export function ScrollInvitation({
   invite,
@@ -88,6 +89,7 @@ function Story({
       ref={story}
       // Decorations autoplay by design; section reveals still handle reduced motion.
       className={`${styles.story} ${preview ? styles.preview : ""} motion-requested`}
+      data-theme={invite.scroll.theme ?? DEFAULT_STORY_THEME}
       aria-label="Scroll Story"
     >
       <div className={styles.motionToolbar}>

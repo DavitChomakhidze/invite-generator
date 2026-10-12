@@ -6,7 +6,7 @@ import {
   isGoogleMapsUrl,
 } from "@/lib/presentation";
 import { StorySection } from "./story-section";
-import { PartyGlass, RibbonBow } from "./party-art";
+import { BowTie, PartyGlass, RibbonBow } from "./party-art";
 import { RsvpReply } from "@/components/rsvp-reply";
 import styles from "./story.module.css";
 
@@ -86,7 +86,12 @@ export function StorySections({
           scrollRoot={scrollRoot}
           tinted
         >
-          <RibbonBow className={`${styles.dressBow} ${styles.ambient}`} />
+          <RibbonBow
+            className={`${styles.dressBow} ${styles.ambient} ${styles.forHer}`}
+          />
+          <BowTie
+            className={`${styles.bowTie} ${styles.ambient} ${styles.forHim}`}
+          />
           <h2 className={styles.eyebrow}>DRESS CODE</h2>
           <p className={styles.dressCode}>{invite.dress_code}</p>
         </StorySection>

@@ -7,6 +7,7 @@ import {
 import { findMusicTrack } from "@/lib/music-catalog";
 import { isPortraitUrl } from "@/lib/portrait";
 import { rsvpIdSchema } from "@/lib/rsvp";
+import { STORY_THEME_IDS } from "@/lib/story-themes";
 
 export const portraitSchema = z.discriminatedUnion("kind", [
   z.object({ kind: z.literal("default") }),
@@ -65,6 +66,8 @@ export const scrollSettingsSchema = z.object({
     .max(300, "Keep the closing message under 300 characters.")
     .default(""),
   music: musicSegmentSchema.nullable().default(null),
+  // Optional so older links stay unchanged; renderers treat a missing theme as Pink Party.
+  theme: z.enum(STORY_THEME_IDS).optional(),
 });
 
 // Present only when the host chose to collect replies; links without it show no RSVP section.
