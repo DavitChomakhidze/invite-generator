@@ -29,6 +29,47 @@
       "license_url": "https://creativecommons.org/publicdomain/zero/1.0/"
     }
   ],
-  "music": [],
-  "music_note": "No locally available music has documented redistribution rights. The production catalog remains empty."
+  "music": [
+    {
+      "file": "/music/carefree.mp3",
+      "title": "Carefree",
+      "author": "Kevin MacLeod",
+      "source": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Carefree.mp3",
+      "license": "CC-BY-4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "\"Carefree\" Kevin MacLeod (incompetech.com), licensed under Creative Commons: By Attribution 4.0 (creativecommons.org/licenses/by/4.0/)",
+      "duration_seconds": 205
+    },
+    {
+      "file": "/music/monkeys-spinning-monkeys.mp3",
+      "title": "Monkeys Spinning Monkeys",
+      "author": "Kevin MacLeod",
+      "source": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Monkeys%20Spinning%20Monkeys.mp3",
+      "license": "CC-BY-4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "\"Monkeys Spinning Monkeys\" Kevin MacLeod (incompetech.com), licensed under Creative Commons: By Attribution 4.0 (creativecommons.org/licenses/by/4.0/)",
+      "duration_seconds": 125
+    },
+    {
+      "file": "/music/fluffing-a-duck.mp3",
+      "title": "Fluffing a Duck",
+      "author": "Kevin MacLeod",
+      "source": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Fluffing%20a%20Duck.mp3",
+      "license": "CC-BY-4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "\"Fluffing a Duck\" Kevin MacLeod (incompetech.com), licensed under Creative Commons: By Attribution 4.0 (creativecommons.org/licenses/by/4.0/)",
+      "duration_seconds": 67
+    },
+    {
+      "file": "/music/gymnopedie-no-1.mp3",
+      "title": "Gymnopedie No. 1",
+      "author": "Kevin MacLeod",
+      "source": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Gymnopedie%20No%201.mp3",
+      "license": "CC-BY-4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "\"Gymnopedie No. 1\" Kevin MacLeod (incompetech.com), licensed under Creative Commons: By Attribution 4.0 (creativecommons.org/licenses/by/4.0/)",
+      "duration_seconds": 187
+    }
+  ],
+  "music_note": "Released tracks are CC BY 4.0 and must keep their attribution. Songs in public/music/local/ are for local testing only and are never committed."
 }

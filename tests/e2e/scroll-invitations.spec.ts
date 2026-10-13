@@ -82,7 +82,8 @@ test("style switching retains drafts, switches preview, and generates a backend-
   await expect(
     page.getByRole("article", { name: "Scroll Story" }),
   ).toBeVisible();
-  await expect(page.getByLabel("Background music")).toBeDisabled();
+  await expect(page.getByLabel("Background music")).toBeEnabled();
+  await expect(page.getByLabel("Background music")).toHaveValue("");
   await page.getByRole("button", { name: "Generate my invitation" }).click();
   const url = await page
     .getByRole("textbox", { name: "Invitation link", exact: true })

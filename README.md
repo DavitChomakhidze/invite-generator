@@ -58,13 +58,22 @@ Creators may enter stable public HTTPS portrait URLs hosted on exactly `images.u
 
 External portraits load directly in the visitor's browser, without an application-server image proxy or referrer. The image host still receives the request and may change/remove the asset. Never paste secret-bearing or temporary access URLs. There is no image upload in this release.
 
-## Music infrastructure and missing assets
+## Music
 
-**The production music catalog is empty.** No locally available songs had verified redistribution rights, so no starter audio files or nonexistent file references are shipped. The generator explains this and creates invitations without music.
+Scroll Story ships four songs by Kevin MacLeod (incompetech.com), licensed under **CC BY 4.0**:
+
+- Carefree
+- Monkeys Spinning Monkeys
+- Fluffing a Duck
+- Gymnopedie No. 1
+
+The license allows commercial use and serving the files, provided he is credited. The required credit shows under the guest music player. Files live in `public/music/`. Licenses are recorded in `lib/music-catalog.ts` and `public/media-licenses.json`.
+
+Songs without redistribution rights may be tried locally only. Put them in the git-ignored `public/music/local/` folder and set `NEXT_PUBLIC_LOCAL_TEST_MUSIC=1` in `.env.local`. They appear only in `next dev`.
 
 The infrastructure is implemented: a typed catalog, song/segment validation, numeric and range controls, explicit editor preview, guest opening with/without music, play/pause/mute/replay, metadata checks, and playback cleanup. Native audio plays the selected segment once, then stops. Guests can replay it. Playback failure never prevents reading the invitation.
 
-To activate music in a future asset-only change:
+To add more songs:
 
 1. Obtain approved MP3 files with clearly documented redistribution rights; place them in `public/music/`.
 2. Add stable IDs, titles, paths, measured durations, and license/required attribution to `lib/music-catalog.ts` and `public/media-licenses.json`.
