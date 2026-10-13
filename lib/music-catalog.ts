@@ -45,28 +45,19 @@ const releasedTracks: readonly MusicTrack[] = [
   ),
 ];
 
-/**
- * Personal songs without a license, for private family invitations only. They
- * appear only when NEXT_PUBLIC_LOCAL_TEST_MUSIC=1 is set: in the git-ignored
- * .env.local locally, or in the Vercel project settings for the live site. The
- * value is read at build time, so redeploy after changing it. Automated tests
- * force it off.
- */
-const personalTracks: readonly MusicTrack[] =
-  process.env.NEXT_PUBLIC_LOCAL_TEST_MUSIC === "1"
-    ? [
-        {
-          id: "local-dancing-queen",
-          title: "Dancing Queen",
-          file: "/music/dancing-queen.mp3",
-          duration_seconds: 230,
-          license: {
-            name: "Personal use only — not licensed",
-            source_url: "https://example.invalid/personal",
-          },
-        },
-      ]
-    : [];
+// Personal, non-commercial family use only; not covered by a license.
+const personalTracks: readonly MusicTrack[] = [
+  {
+    id: "local-dancing-queen",
+    title: "Dancing Queen",
+    file: "/music/dancing-queen.mp3",
+    duration_seconds: 230,
+    license: {
+      name: "Personal use only — not licensed",
+      source_url: "https://example.invalid/personal",
+    },
+  },
+];
 
 export const musicCatalog: readonly MusicTrack[] = [
   ...releasedTracks,

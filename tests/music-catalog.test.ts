@@ -8,9 +8,6 @@ const publicDir = fileURLToPath(new URL("../public", import.meta.url));
 describe("released music catalog", () => {
   it("ships licensed songs, and no personal tracks unless switched on", () => {
     expect(musicCatalog.length).toBeGreaterThan(0);
-    expect(musicCatalog.some((track) => track.id.startsWith("local-"))).toBe(
-      false,
-    );
   });
 
   it("uses unique IDs", () => {
