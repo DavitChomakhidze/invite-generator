@@ -11,3 +11,6 @@ coverage/
 next-env.d.ts
 /AGENTS.md
 /CLAUDE.md
+
+# Copyrighted songs for local testing only. Never commit or deploy these.
+/public/music/local/

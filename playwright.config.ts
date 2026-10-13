@@ -23,6 +23,8 @@ export default defineConfig({
     timeout: 120000,
     env: {
       NEXT_TELEMETRY_DISABLED: "1",
+      // Overrides .env.local so local-only test songs never affect test runs.
+      NEXT_PUBLIC_LOCAL_TEST_MUSIC: "0",
     },
   },
 });
