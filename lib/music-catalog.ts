@@ -46,23 +46,23 @@ const releasedTracks: readonly MusicTrack[] = [
 ];
 
 /**
- * Songs without redistribution rights, for trying the music feature on your own
- * computer. The files live in the git-ignored public/music/local/ folder. Entries
- * appear only in `next dev` with NEXT_PUBLIC_LOCAL_TEST_MUSIC=1 (set in the
- * git-ignored .env.local), so they never reach production or automated tests.
+ * Personal songs without a license, for private family invitations only. They
+ * appear only when NEXT_PUBLIC_LOCAL_TEST_MUSIC=1 is set: in the git-ignored
+ * .env.local locally, or in the Vercel project settings for the live site. The
+ * value is read at build time, so redeploy after changing it. Automated tests
+ * force it off.
  */
-const localTestTracks: readonly MusicTrack[] =
-  process.env.NODE_ENV === "development" &&
+const personalTracks: readonly MusicTrack[] =
   process.env.NEXT_PUBLIC_LOCAL_TEST_MUSIC === "1"
     ? [
         {
           id: "local-dancing-queen",
-          title: "Dancing Queen (local test only)",
-          file: "/music/local/dancing-queen.mp3",
+          title: "Dancing Queen",
+          file: "/music/dancing-queen.mp3",
           duration_seconds: 230,
           license: {
-            name: "Not licensed — local testing only",
-            source_url: "https://example.invalid/local-test",
+            name: "Personal use only — not licensed",
+            source_url: "https://example.invalid/personal",
           },
         },
       ]
@@ -70,7 +70,7 @@ const localTestTracks: readonly MusicTrack[] =
 
 export const musicCatalog: readonly MusicTrack[] = [
   ...releasedTracks,
-  ...localTestTracks,
+  ...personalTracks,
 ];
 
 export function findMusicTrack(id: string): MusicTrack | undefined {

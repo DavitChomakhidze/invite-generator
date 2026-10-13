@@ -6,9 +6,9 @@ import { musicCatalog } from "@/lib/music-catalog";
 const publicDir = fileURLToPath(new URL("../public", import.meta.url));
 
 describe("released music catalog", () => {
-  it("ships songs, and never local-only test tracks outside next dev", () => {
+  it("ships licensed songs, and no personal tracks unless switched on", () => {
     expect(musicCatalog.length).toBeGreaterThan(0);
-    expect(musicCatalog.some((track) => track.file.includes("/local/"))).toBe(
+    expect(musicCatalog.some((track) => track.id.startsWith("local-"))).toBe(
       false,
     );
   });
